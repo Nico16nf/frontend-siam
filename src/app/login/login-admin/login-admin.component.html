@@ -1,0 +1,77 @@
+<section class="login-admin">
+
+  <div class="login-wrapper">
+
+    <!-- PANEL IZQUIERDO -->
+    <div class="login-left">
+
+      <div class="brand">
+        <span class="material-icons">shield</span>
+        <h1>SIAM</h1>
+      </div>
+
+      <h2>Panel Administrativo</h2>
+
+      <p>
+        Accede al sistema de gestión integral del adulto mayor.
+        Control, seguridad y administración centralizada.
+      </p>
+
+      <div class="login-illustration">
+        <span class="material-icons">admin_panel_settings</span>
+      </div>
+
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="login-right">
+
+      <h2>Iniciar Sesión</h2>
+      <p class="sub">Acceso exclusivo para administradores</p>
+
+      <form (ngSubmit)="iniciarSesion()" #loginForm="ngForm">
+
+        <!-- USUARIO -->
+        <div class="input-group">
+          <span class="material-icons">person</span>
+          <input 
+            type="text"
+            name="usuario"
+            [(ngModel)]="usuario"
+            placeholder="Usuario"
+            required>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="input-group">
+          <span class="material-icons">lock</span>
+          <input 
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            placeholder="Contraseña"
+            required>
+        </div>
+
+        <!-- ERROR -->
+        @if (mensajeError) {
+          <p class="error">{{ mensajeError }}</p>
+        }
+
+        <!-- BOTÓN -->
+        <button 
+          class="btn-login"
+          type="submit"
+          [disabled]="cargando">
+
+          {{ cargando ? 'Ingresando...' : 'Ingresar al sistema' }}
+
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>

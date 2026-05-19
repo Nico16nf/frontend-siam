@@ -1,0 +1,276 @@
+<div class="social-page">
+
+  <header class="hero-social">
+    <div class="hero-icon">
+      <span class="material-icons">diversity_3</span>
+    </div>
+
+    <div>
+      <span class="tag">Módulo CIAM</span>
+      <h1>Gestión Social del Adulto Mayor</h1>
+      <p>Evalúa acompañamiento, abandono, violencia familiar, apoyo familiar y condiciones de vivienda.</p>
+    </div>
+  </header>
+
+  <section class="kpi-grid">
+    <div class="kpi-card">
+      <span class="material-icons">person</span>
+      <div>
+        <h3>{{ totalViveSolo() }}</h3>
+        <p>Viven solos</p>
+      </div>
+    </div>
+
+    <div class="kpi-card danger">
+      <span class="material-icons">warning</span>
+      <div>
+        <h3>{{ totalAbandono() }}</h3>
+        <p>Abandono</p>
+      </div>
+    </div>
+
+    <div class="kpi-card danger">
+      <span class="material-icons">report</span>
+      <div>
+        <h3>{{ totalViolencia() }}</h3>
+        <p>Violencia familiar</p>
+      </div>
+    </div>
+
+    <div class="kpi-card alert">
+      <span class="material-icons">support_agent</span>
+      <div>
+        <h3>{{ totalSinApoyo() }}</h3>
+        <p>Requieren apoyo</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel-filtros">
+    <div class="titulo-bloque">
+      <span class="material-icons">manage_search</span>
+      <div>
+        <h2>Búsqueda social</h2>
+        <p>Filtra por DNI, nombre o nivel de riesgo.</p>
+      </div>
+    </div>
+
+    <div class="filtros">
+      <div class="campo">
+        <span class="material-icons">search</span>
+        <input type="text" placeholder="Buscar por DNI o nombre..." [(ngModel)]="busqueda" (input)="filtrar()">
+      </div>
+
+      <div class="campo">
+        <span class="material-icons">monitor_heart</span>
+        <select [(ngModel)]="filtroRiesgo" (change)="filtrar()">
+          <option value="TODOS">Todos los riesgos</option>
+          <option value="BAJO">Bajo</option>
+          <option value="MEDIO">Medio</option>
+          <option value="ALTO">Alto</option>
+          <option value="CRITICO">Crítico</option>
+        </select>
+      </div>
+
+      <button class="btn-secundario" (click)="limpiar()">
+        <span class="material-icons">refresh</span>
+        Limpiar
+      </button>
+    </div>
+
+    @if (mensaje) {
+      <div class="alerta exito">
+        <span class="material-icons">check_circle</span>
+        {{ mensaje }}
+      </div>
+    }
+
+    @if (error) {
+      <div class="alerta error">
+        <span class="material-icons">error</span>
+        {{ error }}
+      </div>
+    }
+  </section>
+
+  <main class="contenido-social">
+
+    <section class="lista-social">
+      <div class="section-title">
+        <h2>Adultos mayores evaluados</h2>
+        <p>{{ adultosFiltrados.length }} registros encontrados</p>
+      </div>
+
+      <div class="cards-lista">
+        @for (adulto of adultosFiltrados; track adulto.id) {
+          <article class="adulto-social-card" (click)="seleccionarAdulto(adulto)">
+
+            <div class="card-top">
+              <div class="avatar">
+                @if (adulto?.datosPersonales?.foto) {
+                  <img [src]="adulto.datosPersonales.foto" alt="Foto">
+                } @else {
+                  <span class="material-icons">person</span>
+                }
+              </div>
+
+              <div>
+                <h3>{{ nombreCompleto(adulto) }}</h3>
+                <p>DNI: {{ adulto?.datosPersonales?.dni }}</p>
+              </div>
+            </div>
+
+            <div class="mini-flags">
+              <span [class]="adulto?.informacionSocial?.viveSolo ? 'flag danger' : 'flag ok'">
+                {{ adulto?.informacionSocial?.viveSolo ? 'Vive solo' : 'Acompañado' }}
+              </span>
+
+              <span [class]="adulto?.informacionSocial?.situacionAbandono ? 'flag danger' : 'flag ok'">
+                {{ adulto?.informacionSocial?.situacionAbandono ? 'Abandono' : 'Sin abandono' }}
+              </span>
+
+              <span [class]="adulto?.informacionSocial?.victimaViolencia ? 'flag danger' : 'flag ok'">
+                {{ adulto?.informacionSocial?.victimaViolencia ? 'Violencia' : 'Sin violencia' }}
+              </span>
+            </div>
+
+            <div class="riesgo-linea">
+              <span [class]="claseRiesgo(adulto)">
+                {{ obtenerRiesgo(adulto) }}
+              </span>
+
+              <strong [class]="claseEstadoSocial(adulto)">
+                Social: {{ estadoSocial(adulto) }}
+              </strong>
+            </div>
+
+            <div class="barra">
+              <div class="progreso" [style.width.%]="calcularPuntajeSocial(adulto)"></div>
+            </div>
+
+          </article>
+        }
+      </div>
+    </section>
+
+    <section class="panel-evaluacion">
+
+      @if (!adultoSeleccionado) {
+        <div class="empty-state">
+          <span class="material-icons">touch_app</span>
+          <h2>Seleccione un adulto mayor</h2>
+          <p>Al seleccionar un registro podrás completar o actualizar su evaluación social.</p>
+        </div>
+      }
+
+      @if (adultoSeleccionado) {
+        <div class="evaluacion-box">
+
+          <div class="perfil-evaluado">
+            <div class="avatar grande">
+              @if (adultoSeleccionado?.datosPersonales?.foto) {
+                <img [src]="adultoSeleccionado.datosPersonales.foto" alt="Foto">
+              } @else {
+                <span class="material-icons">person</span>
+              }
+            </div>
+
+            <div>
+              <span class="tag-verde">Evaluación activa</span>
+              <h2>{{ nombreCompleto(adultoSeleccionado) }}</h2>
+              <p>DNI: {{ adultoSeleccionado?.datosPersonales?.dni }}</p>
+            </div>
+          </div>
+
+          <div class="riesgo-resumen">
+            <div>
+              <small>Puntaje social</small>
+              <h3>{{ calcularPuntajeSocial(adultoSeleccionado) }}%</h3>
+            </div>
+
+            <span [class]="claseEstadoSocial(adultoSeleccionado)">
+              {{ estadoSocial(adultoSeleccionado) }}
+            </span>
+          </div>
+
+          <div class="checks-social">
+
+            <label class="check-card">
+              <input type="checkbox" [(ngModel)]="adultoSeleccionado.informacionSocial.viveSolo">
+              <span class="material-icons">person</span>
+              <div>
+                <strong>Vive solo</strong>
+                <small>Permite identificar si está acompañado o en aislamiento.</small>
+              </div>
+            </label>
+
+            <label class="check-card">
+              <input type="checkbox" [(ngModel)]="adultoSeleccionado.informacionSocial.situacionAbandono">
+              <span class="material-icons">warning</span>
+              <div>
+                <strong>Situación de abandono</strong>
+                <small>Marca casos donde no existe cuidado o soporte familiar.</small>
+              </div>
+            </label>
+
+            <label class="check-card">
+              <input type="checkbox" [(ngModel)]="adultoSeleccionado.informacionSocial.victimaViolencia">
+              <span class="material-icons">report</span>
+              <div>
+                <strong>Víctima de violencia familiar</strong>
+                <small>Registra señales o reportes de violencia familiar.</small>
+              </div>
+            </label>
+
+            <label class="check-card">
+              <input type="checkbox" [(ngModel)]="adultoSeleccionado.informacionSocial.tieneDiscapacidad">
+              <span class="material-icons">accessible</span>
+              <div>
+                <strong>Tiene discapacidad</strong>
+                <small>Identifica necesidades especiales de atención.</small>
+              </div>
+            </label>
+
+          </div>
+
+          <div class="campo vivienda">
+            <span class="material-icons">home_work</span>
+            <select [(ngModel)]="adultoSeleccionado.informacionSocial.tipoVivienda">
+              <option value="">Seleccione tipo de vivienda</option>
+              <option value="PROPIA">Propia</option>
+              <option value="ALQUILADA">Alquilada</option>
+              <option value="FAMILIAR">Familiar</option>
+              <option value="CEDIDA">Cedida</option>
+              <option value="PRECARIA">Precaria</option>
+              <option value="SIN_VIVIENDA">Sin vivienda</option>
+            </select>
+          </div>
+
+          <div class="textarea-group">
+            <label>Observaciones sociales</label>
+            <textarea
+              rows="5"
+              placeholder="Describa condiciones de vivienda, apoyo familiar, alertas o recomendaciones..."
+              [(ngModel)]="adultoSeleccionado.informacionSocial.observacionesSociales">
+            </textarea>
+          </div>
+
+          <div class="acciones">
+            <button class="btn-guardar" (click)="guardarGestionSocial()" [disabled]="guardando">
+              <span class="material-icons">save</span>
+              @if (guardando) {
+                Guardando...
+              } @else {
+                Guardar evaluación social
+              }
+            </button>
+          </div>
+
+        </div>
+      }
+
+    </section>
+
+  </main>
+
+</div>

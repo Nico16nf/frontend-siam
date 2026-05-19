@@ -1,0 +1,675 @@
+.salud-pacientes-page {
+  margin-left: 315px;
+  width: calc(100% - 315px);
+  min-height: 100vh;
+  padding: 30px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at top left, rgba(136,177,167,.16), transparent 30%),
+    linear-gradient(135deg, #f6f8f7, #edf4f2);
+  overflow-x: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* HERO */
+
+.hero-salud {
+  background: linear-gradient(135deg, #6d978d, #88b1a7);
+  border-radius: 32px;
+  padding: 36px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  color: white;
+  box-shadow: 0 18px 40px rgba(109,151,141,.28);
+  margin-bottom: 26px;
+}
+
+.hero-icon {
+  width: 84px;
+  height: 84px;
+  border-radius: 26px;
+  background: rgba(255,255,255,.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-icon .material-icons {
+  font-size: 46px;
+}
+
+.tag,
+.tag-verde {
+  display: inline-flex;
+  padding: 8px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.tag {
+  background: rgba(255,255,255,.18);
+  margin-bottom: 10px;
+}
+
+.tag-verde {
+  background: #e9f6f1;
+  color: #5f8379;
+  margin-bottom: 10px;
+}
+
+.hero-info h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.hero-info p {
+  margin-top: 10px;
+  line-height: 1.6;
+  opacity: .95;
+  max-width: 720px;
+}
+
+/* PANEL GENERAL */
+
+.panel-filtros,
+.panel-lista,
+.panel-atencion {
+  background: rgba(255,255,255,.96);
+  border: 1px solid #dce8e4;
+  border-radius: 28px;
+  padding: 28px;
+  box-shadow: 0 15px 34px rgba(84,111,105,.08);
+}
+
+/* TITULOS */
+
+.titulo-bloque,
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.titulo-bloque {
+  gap: 16px;
+  justify-content: flex-start;
+}
+
+.icono {
+  width: 62px;
+  height: 62px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #729b91, #88b1a7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.icono .material-icons {
+  font-size: 30px;
+}
+
+.titulo-bloque h2,
+.section-title h2 {
+  margin: 0;
+  color: #3f6159;
+  font-weight: 900;
+}
+
+.titulo-bloque p,
+.section-title p {
+  margin-top: 6px;
+  color: #748680;
+}
+
+/* FILTROS */
+
+.filtros {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.campo {
+  flex: 1;
+  min-width: 260px;
+  height: 58px;
+  border-radius: 18px;
+  border: 1px solid #dbe6e2;
+  background: white;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.campo .material-icons {
+  color: #729b91;
+  margin-right: 10px;
+}
+
+.campo input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #41534f;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* BOTONES */
+
+button {
+  border: none;
+  cursor: pointer;
+  transition: .25s ease;
+}
+
+.btn-filtro,
+.btn-limpiar,
+.btn-ver,
+.btn-guardar,
+.btn-cancelar {
+  height: 56px;
+  border-radius: 18px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 900;
+}
+
+.btn-filtro {
+  background: #eef8f5;
+  color: #5a7b72;
+}
+
+.btn-limpiar {
+  background: #f0f3f2;
+  color: #5f706c;
+}
+
+.btn-ver {
+  background: linear-gradient(135deg, #729b91, #88b1a7);
+  color: white;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-guardar {
+  background: linear-gradient(135deg, #729b91, #88b1a7);
+  color: white;
+  box-shadow: 0 14px 28px rgba(114,155,145,.24);
+}
+
+.btn-cancelar {
+  background: #fdecec;
+  color: #c0392b;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-filtro:hover,
+.btn-limpiar:hover,
+.btn-ver:hover,
+.btn-guardar:hover,
+.btn-cancelar:hover {
+  transform: translateY(-2px);
+}
+
+/* ALERTAS */
+
+.alerta {
+  margin-top: 18px;
+  padding: 15px 18px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+}
+
+.alerta.exito {
+  background: #e8f8ef;
+  color: #239b56;
+}
+
+.alerta.error {
+  background: #fdecec;
+  color: #c0392b;
+}
+
+/* GRID */
+
+.layout-pacientes {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* LISTA */
+
+.cards-pacientes {
+  display: grid;
+  gap: 18px;
+}
+
+/* CARD */
+
+.paciente-card {
+  border-radius: 28px;
+  padding: 22px;
+  background: #fcfdfd;
+  border: 1px solid #dfe9e5;
+  transition: .28s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.paciente-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(180deg, #729b91, #88b1a7);
+}
+
+.paciente-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 32px rgba(84,111,105,.12);
+}
+
+.paciente-card.activo {
+  border-color: #729b91;
+  background: #f5fbf8;
+  box-shadow: 0 0 0 4px rgba(114,155,145,.12);
+}
+
+.card-top {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.datos h3 {
+  margin: 0;
+  color: #3e514d;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.datos p {
+  margin-top: 6px;
+  color: #60716c;
+  font-weight: 700;
+}
+
+/* AVATAR */
+
+.avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 22px;
+  background: #eef6f3;
+  border: 2px dashed #88b1a7;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar.grande {
+  width: 100px;
+  height: 100px;
+  border-radius: 28px;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar .material-icons {
+  color: #729b91;
+  font-size: 36px;
+}
+
+/* CHIPS */
+
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+
+.riesgo,
+.chip {
+  padding: 8px 14px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.riesgo.bajo {
+  background: #e8f8ef;
+  color: #239b56;
+}
+
+.riesgo.medio {
+  background: #fff3d9;
+  color: #d68910;
+}
+
+.riesgo.alto {
+  background: #ffe9d8;
+  color: #d35400;
+}
+
+.riesgo.critico {
+  background: #fdecec;
+  color: #c0392b;
+}
+
+.chip.estado {
+  background: #eef4ff;
+  color: #2f5dc0;
+}
+
+.chip.prioridad {
+  background: #fdecec;
+  color: #c0392b;
+}
+
+/* INFO */
+
+.derivacion-info {
+  background: #f7fbf9;
+  border: 1px solid #e1ece8;
+  border-radius: 18px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.derivacion-info p {
+  margin: 7px 0;
+  color: #5f706c;
+  line-height: 1.5;
+}
+
+.derivacion-info strong {
+  color: #3f6159;
+}
+
+.acciones-card {
+  display: grid;
+  gap: 10px;
+}
+
+/* PANEL DERECHO */
+
+.atencion-box {
+  animation: aparecer .35s ease both;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* PERFIL */
+
+.perfil-paciente {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 26px;
+}
+
+.perfil-paciente h2 {
+  margin: 0;
+  color: #3f6159;
+  font-weight: 900;
+}
+
+.perfil-paciente p {
+  margin-top: 6px;
+  color: #60716c;
+}
+
+/* RESUMEN */
+
+.resumen-derivacion {
+  background: #f7fbf9;
+  border: 1px solid #e0ebe7;
+  border-radius: 24px;
+  padding: 22px;
+  margin-bottom: 26px;
+}
+
+.resumen-derivacion h3,
+.form-title {
+  margin: 0 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #3f6159;
+}
+
+.resumen-derivacion .material-icons,
+.form-title .material-icons {
+  color: #729b91;
+}
+
+.resumen-derivacion p {
+  margin: 10px 0;
+  line-height: 1.6;
+  color: #5f706c;
+}
+
+/* FORM */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.campo-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo-form.full {
+  grid-column: 1 / -1;
+}
+
+.campo-form label {
+  margin-bottom: 10px;
+  color: #5c6f69;
+  font-weight: 900;
+}
+
+.campo-form input,
+.campo-form select,
+.campo-form textarea {
+  border: 1px solid #d9e4e0;
+  border-radius: 18px;
+  padding: 15px 16px;
+  outline: none;
+  background: white;
+  font-family: inherit;
+  font-size: 14px;
+  color: #43514d;
+  transition: .25s ease;
+}
+
+.campo-form input:focus,
+.campo-form select:focus,
+.campo-form textarea:focus {
+  border-color: #729b91;
+  box-shadow: 0 0 0 4px rgba(114,155,145,.14);
+}
+
+.campo-form textarea {
+  resize: vertical;
+}
+
+/* CHECK */
+
+.check-card {
+  margin-top: 22px;
+  border-radius: 20px;
+  border: 1px solid #dbe6e2;
+  background: #fbfcfc;
+  min-height: 64px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+  color: #5c6f69;
+  cursor: pointer;
+}
+
+.check-card:has(input:checked) {
+  background: #eef8f5;
+  border-color: #729b91;
+}
+
+.check-card input {
+  width: 18px;
+  height: 18px;
+}
+
+.check-card .material-icons {
+  color: #729b91;
+}
+
+/* OBSERVACION */
+
+.observacion {
+  margin-top: 22px;
+}
+
+/* ACCIONES */
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 26px;
+}
+
+.btn-guardar:disabled {
+  opacity: .65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* EMPTY */
+
+.empty {
+  text-align: center;
+  padding: 55px 20px;
+  color: #7a8b86;
+}
+
+.empty.grande {
+  padding: 100px 20px;
+}
+
+.empty .material-icons {
+  font-size: 70px;
+  color: #88b1a7;
+}
+
+.empty h3 {
+  margin: 12px 0 8px;
+  color: #3f6159;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+
+  .layout-pacientes {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 1100px) {
+
+  .salud-pacientes-page {
+    margin-left: 280px;
+    width: calc(100% - 280px);
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .salud-pacientes-page {
+    margin-left: 0;
+    width: 100%;
+    padding: 16px;
+  }
+
+  .hero-salud,
+  .perfil-paciente,
+  .card-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-salud {
+    padding: 28px;
+  }
+
+  .hero-info h1 {
+    font-size: 28px;
+  }
+
+  .filtros {
+    flex-direction: column;
+  }
+
+  .btn-filtro,
+  .btn-limpiar,
+  .btn-ver,
+  .btn-cancelar,
+  .btn-guardar {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-filtros,
+  .panel-lista,
+  .panel-atencion {
+    padding: 20px;
+    border-radius: 24px;
+  }
+
+}

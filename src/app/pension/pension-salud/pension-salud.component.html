@@ -1,0 +1,383 @@
+<section class="salud-container">
+
+  <!-- HEADER -->
+  <div class="header">
+
+    <div>
+      <h1>
+        Salud de Beneficiarios
+      </h1>
+
+      <p>
+        Consulta médica y seguimiento de salud
+        de los adultos mayores afiliados
+        a Pensión 65.
+      </p>
+    </div>
+
+    <button
+      class="btn-recargar"
+      (click)="listarAdultos()">
+
+      <span class="material-icons">
+        refresh
+      </span>
+
+      Actualizar
+
+    </button>
+
+  </div>
+
+  <!-- ALERTAS -->
+
+  @if (mensaje) {
+
+    <div class="alert success">
+      {{ mensaje }}
+    </div>
+
+  }
+
+  @if (error) {
+
+    <div class="alert error">
+      {{ error }}
+    </div>
+
+  }
+
+  <!-- BUSCADOR -->
+
+  <div class="buscador">
+
+    <div class="input-box">
+
+      <span class="material-icons">
+        search
+      </span>
+
+      <input
+        type="text"
+        placeholder="Buscar por DNI o nombres..."
+        [(ngModel)]="busqueda"
+        (input)="filtrar()">
+
+    </div>
+
+  </div>
+
+  <!-- CONTENIDO -->
+
+  <div class="contenido">
+
+    <!-- LISTA DE ADULTOS -->
+
+    <div class="adultos-card">
+
+      <div class="tabla-header">
+
+        <h2>
+          Adultos Mayores
+        </h2>
+
+        <span class="contador">
+          {{ adultosFiltrados.length }} registros
+        </span>
+
+      </div>
+
+      @if (cargandoAdultos) {
+
+        <div class="loading">
+          Cargando adultos mayores...
+        </div>
+
+      } @else {
+
+        <div class="lista-adultos">
+
+          @for (adulto of adultosFiltrados; track adulto.id) {
+
+            <div
+              class="adulto-item"
+              [class.activo]="adultoSeleccionado?.id === adulto.id"
+              (click)="seleccionarAdulto(adulto)">
+
+              <!-- FOTO -->
+              <div class="avatar">
+
+                <span class="material-icons">
+                  elderly
+                </span>
+
+              </div>
+
+              <!-- INFO -->
+              <div class="adulto-info">
+
+                <h3>
+
+                  {{ adulto.nombres }}
+                  {{ adulto.apellidoPaterno }}
+                  {{ adulto.apellidoMaterno }}
+
+                </h3>
+
+                <p>
+                  DNI:
+                  {{ adulto.dni }}
+                </p>
+
+                <small>
+                  {{ adulto.edad }} años
+                  •
+                  {{ adulto.distrito }}
+                </small>
+
+              </div>
+
+              <!-- RIESGO -->
+              <div
+                class="riesgo"
+                [class]="claseRiesgo(adulto.riesgo)">
+
+                {{ adulto.riesgo }}
+
+              </div>
+
+            </div>
+
+          } @empty {
+
+            <div class="vacio">
+              No hay adultos mayores registrados.
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </div>
+
+    <!-- PANEL HISTORIAL -->
+
+    <div class="historial-card">
+
+      @if (adultoSeleccionado) {
+
+        <!-- PERFIL -->
+
+        <div class="perfil">
+
+          <div class="perfil-avatar">
+
+            <span class="material-icons">
+              health_and_safety
+            </span>
+
+          </div>
+
+          <div class="perfil-info">
+
+            <h2>
+
+              {{ adultoSeleccionado.nombres }}
+              {{ adultoSeleccionado.apellidoPaterno }}
+
+            </h2>
+
+            <p>
+
+              DNI:
+              {{ adultoSeleccionado.dni }}
+
+            </p>
+
+            <span>
+
+              {{ adultoSeleccionado.edad }} años
+              •
+              {{ adultoSeleccionado.distrito }}
+
+            </span>
+
+          </div>
+
+        </div>
+
+        <!-- HISTORIAL -->
+
+        <div class="historial-header">
+
+          <h3>
+            Historial Clínico
+          </h3>
+
+        </div>
+
+        @if (cargandoSalud) {
+
+          <div class="loading">
+            Cargando historial médico...
+          </div>
+
+        } @else {
+
+          <div class="timeline">
+
+            @for (salud of historialSalud; track salud.id) {
+
+              <div class="timeline-item">
+
+                <div class="timeline-dot"></div>
+
+                <div class="timeline-content">
+
+                  <div class="timeline-top">
+
+                    <strong>
+                      {{ salud.tipoAtencion }}
+                    </strong>
+
+                    <span>
+                      {{ salud.fechaAtencion }}
+                    </span>
+
+                  </div>
+
+                  <p>
+
+                    <strong>Médico:</strong>
+                    {{ salud.medicoResponsable }}
+
+                  </p>
+
+                  <p>
+
+                    <strong>Diagnóstico:</strong>
+                    {{ salud.diagnostico }}
+
+                  </p>
+
+                  <p>
+
+                    <strong>Tratamiento:</strong>
+                    {{ salud.tratamiento }}
+
+                  </p>
+
+                  <p>
+
+                    <strong>Presión:</strong>
+                    {{ salud.presionArterial }}
+
+                  </p>
+
+                  <div class="estadisticas">
+
+                    <div>
+
+                      <span>Peso</span>
+
+                      <strong>
+                        {{ salud.peso }} kg
+                      </strong>
+
+                    </div>
+
+                    <div>
+
+                      <span>Talla</span>
+
+                      <strong>
+                        {{ salud.talla }} m
+                      </strong>
+
+                    </div>
+
+                    <div>
+
+                      <span>Glucosa</span>
+
+                      <strong>
+                        {{ salud.glucosa }}
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+                  @if (salud.requiereSeguimiento) {
+
+                    <div class="seguimiento">
+
+                      <span class="material-icons">
+                        warning
+                      </span>
+
+                      Requiere seguimiento médico
+
+                    </div>
+
+                  }
+
+                </div>
+
+              </div>
+
+            } @empty {
+
+              <div class="sin-historial">
+
+                <span class="material-icons">
+                  medical_information
+                </span>
+
+                <h3>
+                  Sin historial médico
+                </h3>
+
+                <p>
+                  Este adulto mayor aún no tiene
+                  registros clínicos.
+                </p>
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+      } @else {
+
+        <!-- SIN SELECCION -->
+
+        <div class="sin-seleccion">
+
+          <span class="material-icons">
+            health_and_safety
+          </span>
+
+          <h2>
+            Seleccione un adulto mayor
+          </h2>
+
+          <p>
+            Aquí podrás visualizar el historial
+            médico completo y seguimiento clínico.
+          </p>
+
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</section>

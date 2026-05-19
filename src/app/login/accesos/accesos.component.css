@@ -1,0 +1,270 @@
+/* ============================================================
+   SECCIÓN
+============================================================ */
+.accesos {
+  min-height: calc(100vh - 75px);
+  background: #EFEDE7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 40px;
+  font-family: 'Inter', system-ui, sans-serif;
+  position: relative;
+}
+
+/* ============================================================
+   HEADER
+============================================================ */
+.accesos-header {
+  text-align: center;
+  margin-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.accesos-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(114, 155, 145, 0.35);
+  color: #2E4540;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 7px 18px;
+  border-radius: 100px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  .material-icons { font-size: 12px; color: #729B91; }
+}
+
+.accesos-title {
+  font-size: 52px;
+  font-weight: 900;
+  color: #0A110F;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  margin: 0;
+
+  span { color: #729B91; }
+}
+
+.accesos-sub {
+  font-size: 15.5px;
+  color: #7D8B86;
+  max-width: 400px;
+  line-height: 1.65;
+  font-weight: 400;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   GRID
+============================================================ */
+.accesos-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  width: 100%;
+  max-width: 1060px;
+}
+
+/* ============================================================
+   CARD
+============================================================ */
+.acceso-card {
+  background: #fff;
+  border-radius: 26px;
+  border: 1px solid #E0DAD3;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
+  transition:
+    transform    0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow   0.3s ease,
+    border-color 0.3s ease;
+
+  &:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 32px 64px rgba(0,0,0,0.12);
+    border-color: #C2D3CD;
+  }
+}
+
+/* Franja superior de color */
+.card-band {
+  height: 5px;
+  width: 100%;
+  flex-shrink: 0;
+}
+.admin   .card-band { background: #374151; }
+.ciam    .card-band { background: #729B91; }
+.salud   .card-band { background: #5A7E74; }
+.pension .card-band { background: #6B7F8E; }
+
+/* Cuerpo de la card */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px 0;
+  flex: 1;
+  position: relative;
+}
+
+/* Número decorativo */
+.card-num {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: rgba(0,0,0,0.1);
+}
+
+/* ============================================================
+   ÍCONO
+============================================================ */
+.acceso-icon {
+  width: 84px;
+  height: 84px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  .material-icons { font-size: 36px; color: #fff; }
+}
+
+.acceso-card:hover .acceso-icon {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.admin   .acceso-icon { background: #374151; }
+.ciam    .acceso-icon { background: #729B91; }
+.salud   .acceso-icon { background: #5A7E74; }
+.pension .acceso-icon { background: #6B7F8E; }
+
+/* ============================================================
+   INFO
+============================================================ */
+.acceso-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-bottom: 8px;
+
+  h3 {
+    font-size: 14px;
+    font-weight: 800;
+    color: #0A110F;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+  }
+
+  .rol {
+    font-size: 13px;
+    font-weight: 500;
+    color: #4B5A55;
+    margin: 0;
+  }
+
+  .desc {
+    font-size: 12px;
+    color: #9FABA6;
+    line-height: 1.55;
+    margin: 2px 0 0;
+  }
+}
+
+/* ============================================================
+   FOOTER — se colorea al hover
+============================================================ */
+.acceso-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 16px 24px;
+  border-top: 1px solid #F0EBE4;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #B0BDB9;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.25s ease, gap 0.25s ease, background 0.25s ease;
+
+  .material-icons {
+    font-size: 15px;
+    transition: transform 0.25s ease;
+  }
+}
+
+.acceso-card:hover .acceso-footer { color: #fff; gap: 8px; }
+.acceso-card:hover .acceso-footer .material-icons { transform: translateX(5px); }
+
+.admin.acceso-card:hover   .acceso-footer { background: #374151; }
+.ciam.acceso-card:hover    .acceso-footer { background: #729B91; }
+.salud.acceso-card:hover   .acceso-footer { background: #5A7E74; }
+.pension.acceso-card:hover .acceso-footer { background: #6B7F8E; }
+
+/* ============================================================
+   RESPONSIVE ≤ 900px
+============================================================ */
+@media (max-width: 900px) {
+  .accesos-title { font-size: 38px; }
+
+  .accesos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 580px;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE ≤ 560px
+============================================================ */
+@media (max-width: 560px) {
+  .accesos { padding: 48px 18px; }
+
+  .accesos-title { font-size: 28px; }
+
+  .accesos-sub { font-size: 13.5px; }
+
+  .accesos-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .card-body { padding: 22px 16px 0; }
+
+  .acceso-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    margin-bottom: 16px;
+
+    .material-icons { font-size: 26px; }
+  }
+
+  .acceso-info h3 { font-size: 11.5px; }
+
+  .acceso-info .desc { display: none; }
+
+  .acceso-footer { padding: 12px 16px; font-size: 11px; }
+}

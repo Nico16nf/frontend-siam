@@ -1,0 +1,19 @@
+<app-navbar-general *ngIf="mostrarNavbarFooter"></app-navbar-general>
+
+<div class="layout">
+
+  <app-sidebar-admin *ngIf="esAdmin"></app-sidebar-admin>
+
+  <app-sidebar-ciam *ngIf="esCiam"></app-sidebar-ciam>
+
+  <app-sidebar-salud *ngIf="esSalud"></app-sidebar-salud>
+
+<app-sidebar-pesion *ngIf="esPension"></app-sidebar-pesion>
+
+  <main class="contenido">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>
+
+<app-footer *ngIf="mostrarNavbarFooter"></app-footer>

@@ -1,0 +1,479 @@
+.sidebar-pension {
+  width: 320px;
+  min-width: 320px;
+  height: 100vh;
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #F7FAF9 100%
+    );
+
+  border-right: 1px solid #E4ECE8;
+
+  padding: 22px 18px;
+
+  display: flex;
+  flex-direction: column;
+
+  position: sticky;
+  top: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  transition: .35s ease;
+
+  box-shadow:
+    8px 0 30px rgba(114,155,145,.08);
+}
+
+/* =========================
+   SCROLL
+========================= */
+
+.sidebar-pension::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-pension::-webkit-scrollbar-thumb {
+  background: #D6E4DF;
+  border-radius: 20px;
+}
+
+/* =========================
+   COLAPSADO
+========================= */
+
+.sidebar-pension.colapsado {
+  width: 105px;
+  min-width: 105px;
+  padding-inline: 12px;
+}
+
+.sidebar-pension.colapsado .logo-text,
+.sidebar-pension.colapsado .perfil-info,
+.sidebar-pension.colapsado .item span:last-child,
+.sidebar-pension.colapsado .logout-btn span:last-child {
+  display: none;
+}
+
+.sidebar-pension.colapsado .item,
+.sidebar-pension.colapsado .logout-btn {
+  justify-content: center;
+  padding: 0;
+}
+
+.sidebar-pension.colapsado .perfil {
+  justify-content: center;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.top-sidebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 28px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo-icon {
+  width: 62px;
+  height: 62px;
+
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #729B91,
+      #9BC5BA
+    );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+
+  box-shadow:
+    0 10px 25px rgba(114,155,145,.28);
+}
+
+.logo-icon .material-icons {
+  font-size: 32px;
+}
+
+.logo-text h2 {
+  margin: 0;
+
+  font-size: 24px;
+  font-weight: 900;
+
+  color: #22353C;
+
+  letter-spacing: .5px;
+}
+
+.logo-text p {
+  margin: 3px 0 0;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #729B91;
+
+  letter-spacing: .3px;
+}
+
+/* =========================
+   BOTON MENU
+========================= */
+
+.toggle-btn {
+  width: 48px;
+  height: 48px;
+
+  border: none;
+  outline: none;
+
+  border-radius: 16px;
+
+  background: #EEF5F3;
+
+  color: #729B91;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: .25s ease;
+}
+
+.toggle-btn:hover {
+  background: #DCEBE6;
+
+  transform: rotate(90deg);
+}
+
+.toggle-btn .material-icons {
+  font-size: 24px;
+}
+
+/* =========================
+   PERFIL
+========================= */
+
+.perfil {
+  background:
+    linear-gradient(
+      135deg,
+      #F7FBFA,
+      #EDF5F2
+    );
+
+  border: 1px solid #E2ECE8;
+
+  border-radius: 28px;
+
+  padding: 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  margin-bottom: 30px;
+
+  cursor: pointer;
+
+  transition: .3s ease;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.perfil::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: -100%;
+
+  width: 100%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.5),
+      transparent
+    );
+
+  transition: .7s;
+}
+
+.perfil:hover::before {
+  left: 100%;
+}
+
+.perfil:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 18px 35px rgba(114,155,145,.16);
+}
+
+.avatar {
+  width: 74px;
+  height: 74px;
+
+  min-width: 74px;
+
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #729B91,
+      #9BC5BA
+    );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+
+  box-shadow:
+    0 12px 24px rgba(114,155,145,.22);
+}
+
+.avatar .material-icons {
+  font-size: 36px;
+}
+
+.perfil-info h4 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 900;
+
+  color: #2B3F46;
+
+  line-height: 1.2;
+}
+
+.perfil-info p {
+  margin-top: 5px;
+
+  color: #729B91;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* =========================
+   MENU
+========================= */
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  flex: 1;
+}
+
+.item {
+  width: 100%;
+  height: 60px;
+
+  border-radius: 20px;
+
+  text-decoration: none;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 0 18px;
+
+  color: #4D6268;
+
+  font-size: 15px;
+  font-weight: 800;
+
+  transition: .25s ease;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.item::before {
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+  left: -100%;
+
+  width: 100%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.25),
+      transparent
+    );
+
+  transition: .7s;
+}
+
+.item:hover::before {
+  left: 100%;
+}
+
+.item .material-icons {
+  font-size: 24px;
+  color: #729B91;
+
+  transition: .25s ease;
+}
+
+.item:hover {
+  background: #EEF5F3;
+
+  transform: translateX(5px);
+}
+
+.item.active {
+  background:
+    linear-gradient(
+      135deg,
+      #729B91,
+      #8FB5AB
+    );
+
+  color: white;
+
+  box-shadow:
+    0 16px 30px rgba(114,155,145,.24);
+}
+
+.item.active .material-icons {
+  color: white;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.sidebar-footer {
+  margin-top: 24px;
+}
+
+.logout-btn {
+  width: 100%;
+  height: 62px;
+
+  border: none;
+  outline: none;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #FFF1F1,
+      #FDE2E2
+    );
+
+  color: #C0392B;
+
+  font-size: 15px;
+  font-weight: 900;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 0 20px;
+
+  cursor: pointer;
+
+  transition: .25s ease;
+}
+
+.logout-btn:hover {
+  transform: translateY(-3px);
+
+  background:
+    linear-gradient(
+      135deg,
+      #FDE2E2,
+      #F9D1D1
+    );
+
+  box-shadow:
+    0 15px 28px rgba(192,57,43,.16);
+}
+
+.logout-btn .material-icons {
+  font-size: 24px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+
+  .sidebar-pension {
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    z-index: 999;
+
+    box-shadow:
+      0 0 40px rgba(0,0,0,.16);
+  }
+}
+
+@media (max-width: 768px) {
+
+  .sidebar-pension {
+    width: 290px;
+    min-width: 290px;
+  }
+
+  .logo-text h2 {
+    font-size: 22px;
+  }
+
+  .item {
+    height: 56px;
+    font-size: 14px;
+  }
+
+  .logout-btn {
+    height: 58px;
+  }
+}

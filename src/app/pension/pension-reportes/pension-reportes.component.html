@@ -1,0 +1,199 @@
+<section class="reportes-container">
+
+  <div class="header">
+    <div>
+      <h1>Reportes Pensión 65</h1>
+      <p>
+        Genera reportes de beneficiarios, posibles beneficiarios,
+        pagos, estados y evaluaciones económicas.
+      </p>
+    </div>
+
+    <div class="acciones-header">
+      <button class="btn-secundario" (click)="imprimirReporte()">
+        <span class="material-icons">print</span>
+        Imprimir
+      </button>
+
+      <button class="btn-principal" (click)="exportarExcel()">
+        <span class="material-icons">download</span>
+        Exportar Excel
+      </button>
+    </div>
+  </div>
+
+  @if (mensaje) {
+    <div class="alert success">{{ mensaje }}</div>
+  }
+
+  @if (error) {
+    <div class="alert error">{{ error }}</div>
+  }
+
+  <div class="filtros-card">
+
+    <div class="input-box">
+      <span class="material-icons">search</span>
+      <input
+        type="text"
+        placeholder="Buscar por DNI o adulto mayor..."
+        [(ngModel)]="busqueda"
+        (input)="aplicarFiltros()">
+    </div>
+
+    <select [(ngModel)]="tipoReporte" (change)="aplicarFiltros()">
+      <option value="GENERAL">Reporte general</option>
+      <option value="BENEFICIARIOS">Solo beneficiarios</option>
+      <option value="POSIBLES">Posibles beneficiarios</option>
+      <option value="PAGOS">Reporte de pagos</option>
+    </select>
+
+    <select [(ngModel)]="estadoFiltro" (change)="aplicarFiltros()">
+      <option value="TODOS">Todos los estados</option>
+      <option value="BENEFICIARIO">Beneficiario</option>
+      <option value="PENDIENTE">Pendiente</option>
+      <option value="NO_CALIFICA">No califica</option>
+      <option value="SUSPENDIDO">Suspendido</option>
+      <option value="SIN_EVALUAR">Sin evaluar</option>
+      <option value="ACTIVO">Activo</option>
+    </select>
+
+    <button class="btn-limpiar" (click)="limpiarFiltros()">
+      <span class="material-icons">cleaning_services</span>
+      Limpiar
+    </button>
+
+  </div>
+
+  <div class="resumen-grid">
+
+    <div class="resumen-card">
+      <span class="material-icons">assignment</span>
+      <div>
+        <h3>{{ totalEvaluados }}</h3>
+        <p>Registros del reporte</p>
+      </div>
+    </div>
+
+    <div class="resumen-card verde">
+      <span class="material-icons">verified</span>
+      <div>
+        <h3>{{ totalBeneficiarios }}</h3>
+        <p>Beneficiarios</p>
+      </div>
+    </div>
+
+    <div class="resumen-card azul">
+      <span class="material-icons">person_search</span>
+      <div>
+        <h3>{{ totalPosibles }}</h3>
+        <p>Posibles beneficiarios</p>
+      </div>
+    </div>
+
+    <div class="resumen-card dorado">
+      <span class="material-icons">payments</span>
+      <div>
+        <h3>S/ {{ montoTotalPagado }}</h3>
+        <p>Total pagado registrado</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tabla-card">
+
+    <div class="tabla-header">
+      <div>
+        <h2>Detalle del reporte</h2>
+        <p>Listado filtrado según los criterios seleccionados.</p>
+      </div>
+
+      <span class="contador">
+        {{ reporteFiltrado.length }} registros
+      </span>
+    </div>
+
+    @if (cargando) {
+      <div class="loading">
+        Cargando reportes de Pensión 65...
+      </div>
+    } @else {
+
+      <div class="tabla-responsive">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>DNI</th>
+              <th>Adulto mayor</th>
+              <th>Ubicación</th>
+              <th>Estado</th>
+              <th>Beneficiario</th>
+              <th>Afiliación</th>
+              <th>Último pago</th>
+              <th>Monto</th>
+              <th>Observación</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            @for (pension of reporteFiltrado; track pension.id) {
+              <tr>
+                <td>{{ dni(pension) }}</td>
+
+                <td>
+                  <strong>{{ nombreCompleto(pension) }}</strong>
+                </td>
+
+                <td>{{ ubicacion(pension) }}</td>
+
+                <td>
+                  <span [class]="claseEstado(pension.estado)">
+                    {{ pension.estado || 'SIN_EVALUAR' }}
+                  </span>
+                </td>
+
+                <td>
+                  {{ pension.beneficiario ? 'Sí' : 'No' }}
+                </td>
+
+                <td>
+                  {{ pension.fechaAfiliacion || 'No asignada' }}
+                </td>
+
+                <td>
+                  {{ pension.fechaUltimoPago || 'Sin pago' }}
+                </td>
+
+                <td>
+                  <strong class="monto">
+                    S/ {{ pension.montoUltimoPago || 0 }}
+                  </strong>
+                </td>
+
+                <td>
+                  {{ pension.observaciones || 'Sin observaciones' }}
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="9" class="vacio">
+                  No hay datos para el reporte seleccionado.
+                </td>
+              </tr>
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    }
+
+  </div>
+
+</section>

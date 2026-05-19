@@ -1,0 +1,254 @@
+<div class="ciam-dashboard">
+
+  <section class="hero-dashboard">
+    <div class="hero-icon">
+      <span class="material-icons">dashboard</span>
+    </div>
+
+    <div class="hero-info">
+      <span class="tag">Panel CIAM</span>
+      <h1>Dashboard del Adulto Mayor</h1>
+      <p>Resumen general de registros, riesgos, SISFOH, visitas, salud y alertas prioritarias.</p>
+    </div>
+
+    <button class="btn-recargar" (click)="recargar()">
+      <span class="material-icons">refresh</span>
+      Actualizar
+    </button>
+  </section>
+
+  @if (error) {
+    <div class="alerta error">
+      <span class="material-icons">error</span>
+      {{ error }}
+    </div>
+  }
+
+  @if (cargando) {
+    <section class="loading">
+      <div class="spinner"></div>
+      <p>Cargando información del CIAM...</p>
+    </section>
+  }
+
+  @if (!cargando) {
+
+    <section class="kpi-grid">
+
+      <div class="kpi-card">
+        <span class="material-icons">groups</span>
+        <div>
+          <h3>{{ totalAdultos }}</h3>
+          <p>Adultos mayores</p>
+        </div>
+      </div>
+
+      <div class="kpi-card danger">
+        <span class="material-icons">warning</span>
+        <div>
+          <h3>{{ riesgoCritico + riesgoAlto }}</h3>
+          <p>Casos alto/crítico</p>
+        </div>
+      </div>
+
+      <div class="kpi-card alert">
+        <span class="material-icons">home</span>
+        <div>
+          <h3>{{ vivenSolos }}</h3>
+          <p>Viven solos</p>
+        </div>
+      </div>
+
+      <div class="kpi-card success">
+        <span class="material-icons">payments</span>
+        <div>
+          <h3>{{ pension65 }}</h3>
+          <p>Posibles Pensión 65</p>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="dashboard-grid">
+
+      <div class="panel">
+        <div class="panel-title">
+          <span class="material-icons">monitor_heart</span>
+          <div>
+            <h2>Riesgo integral</h2>
+            <p>Distribución por nivel de riesgo.</p>
+          </div>
+        </div>
+
+        <div class="riesgo-lista">
+          <div class="riesgo-item bajo">
+            <div>
+              <strong>Bajo</strong>
+              <span>{{ riesgoBajo }} casos</span>
+            </div>
+            <div class="barra"><div [style.width.%]="porcentaje(riesgoBajo)"></div></div>
+            <b>{{ porcentaje(riesgoBajo) }}%</b>
+          </div>
+
+          <div class="riesgo-item medio">
+            <div>
+              <strong>Medio</strong>
+              <span>{{ riesgoMedio }} casos</span>
+            </div>
+            <div class="barra"><div [style.width.%]="porcentaje(riesgoMedio)"></div></div>
+            <b>{{ porcentaje(riesgoMedio) }}%</b>
+          </div>
+
+          <div class="riesgo-item alto">
+            <div>
+              <strong>Alto</strong>
+              <span>{{ riesgoAlto }} casos</span>
+            </div>
+            <div class="barra"><div [style.width.%]="porcentaje(riesgoAlto)"></div></div>
+            <b>{{ porcentaje(riesgoAlto) }}%</b>
+          </div>
+
+          <div class="riesgo-item critico">
+            <div>
+              <strong>Crítico</strong>
+              <span>{{ riesgoCritico }} casos</span>
+            </div>
+            <div class="barra"><div [style.width.%]="porcentaje(riesgoCritico)"></div></div>
+            <b>{{ porcentaje(riesgoCritico) }}%</b>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span class="material-icons">diversity_3</span>
+          <div>
+            <h2>Gestión social</h2>
+            <p>Condiciones sociales identificadas.</p>
+          </div>
+        </div>
+
+        <div class="social-grid">
+          <div class="social-card">
+            <span class="material-icons">person</span>
+            <h3>{{ vivenSolos }}</h3>
+            <p>Viven solos</p>
+          </div>
+
+          <div class="social-card danger">
+            <span class="material-icons">report</span>
+            <h3>{{ abandono }}</h3>
+            <p>Abandono</p>
+          </div>
+
+          <div class="social-card danger">
+            <span class="material-icons">gpp_bad</span>
+            <h3>{{ violencia }}</h3>
+            <p>Violencia</p>
+          </div>
+
+          <div class="social-card alert">
+            <span class="material-icons">accessible</span>
+            <h3>{{ discapacidad }}</h3>
+            <p>Discapacidad</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span class="material-icons">fact_check</span>
+          <div>
+            <h2>SISFOH</h2>
+            <p>Clasificación socioeconómica.</p>
+          </div>
+        </div>
+
+        <div class="sisfoh-lista">
+          <div>
+            <span>Pobre extremo</span>
+            <strong>{{ pobresExtremos }}</strong>
+          </div>
+
+          <div>
+            <span>Pobre</span>
+            <strong>{{ pobres }}</strong>
+          </div>
+
+          <div>
+            <span>No pobre</span>
+            <strong>{{ noPobres }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span class="material-icons">medical_services</span>
+          <div>
+            <h2>Salud y seguimiento</h2>
+            <p>Atenciones, derivaciones y visitas.</p>
+          </div>
+        </div>
+
+        <div class="seguimiento-grid">
+          <div>
+            <span class="material-icons">local_hospital</span>
+            <h3>{{ totalAtenciones }}</h3>
+            <p>Atenciones</p>
+          </div>
+
+          <div>
+            <span class="material-icons">home_health</span>
+            <h3>{{ totalVisitas }}</h3>
+            <p>Visitas</p>
+          </div>
+
+          <div>
+            <span class="material-icons">send</span>
+            <h3>{{ totalDerivaciones }}</h3>
+            <p>Derivaciones</p>
+          </div>
+
+          <div>
+            <span class="material-icons">pending_actions</span>
+            <h3>{{ derivacionesPendientes.length }}</h3>
+            <p>Pendientes</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="panel alertas-panel">
+      <div class="panel-title">
+        <span class="material-icons">notification_important</span>
+        <div>
+          <h2>Alertas prioritarias</h2>
+          <p>Casos que requieren revisión del CIAM.</p>
+        </div>
+      </div>
+
+      @if (alertas.length === 0) {
+        <div class="empty">
+          <span class="material-icons">check_circle</span>
+          <h3>No hay alertas críticas</h3>
+          <p>Actualmente no se detectaron alertas prioritarias.</p>
+        </div>
+      }
+
+      @if (alertas.length > 0) {
+        <div class="alertas-lista">
+          @for (alerta of alertas; track alerta.mensaje) {
+            <div class="alerta-item" [ngClass]="alerta.tipo">
+              <span class="material-icons">{{ alerta.icono }}</span>
+              <p>{{ alerta.mensaje }}</p>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+  }
+
+</div>

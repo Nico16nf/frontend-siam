@@ -1,0 +1,114 @@
+<section class="login-salud">
+
+  <div class="login-wrapper">
+
+    <!-- IZQUIERDA -->
+    <div class="login-left">
+
+      <div class="brand">
+
+        <span class="material-icons">
+          local_hospital
+        </span>
+
+        <h1>SIAM</h1>
+
+      </div>
+
+      <h2>Panel Salud</h2>
+
+      <p>
+        Accede al módulo médico del Sistema Integral del Adulto Mayor.
+        Gestiona pacientes derivados, historial clínico,
+        visitas médicas y campañas de salud.
+      </p>
+
+      <div class="login-illustration">
+
+        <span class="material-icons">
+          medical_services
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- DERECHA -->
+    <div class="login-right">
+
+      <h2>Iniciar Sesión</h2>
+
+      <p class="sub">
+        Acceso exclusivo para personal médico y salud
+      </p>
+
+      <form
+        (ngSubmit)="iniciarSesion()"
+        #loginForm="ngForm">
+
+        <!-- USUARIO -->
+        <div class="input-group">
+
+          <span class="material-icons">
+            person
+          </span>
+
+          <input
+            type="text"
+            name="usuario"
+            [(ngModel)]="usuario"
+            placeholder="Usuario"
+            required>
+
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="input-group">
+
+          <span class="material-icons">
+            lock
+          </span>
+
+          <input
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            placeholder="Contraseña"
+            required>
+
+        </div>
+
+        <!-- ERROR -->
+        @if (mensajeError) {
+
+          <p class="error">
+            {{ mensajeError }}
+          </p>
+
+        }
+
+        <!-- BOTON -->
+        <button
+          class="btn-login"
+          type="submit"
+          [disabled]="cargando">
+
+          <span class="material-icons">
+            login
+          </span>
+
+          {{
+            cargando
+              ? 'Ingresando...'
+              : 'Ingresar al módulo Salud'
+          }}
+
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>

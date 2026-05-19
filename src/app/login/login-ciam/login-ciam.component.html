@@ -1,0 +1,66 @@
+<section class="login-ciam">
+
+  <div class="login-wrapper">
+
+    <div class="login-left">
+
+      <div class="brand">
+        <span class="material-icons">groups</span>
+        <h1>SIAM</h1>
+      </div>
+
+      <h2>Panel CIAM</h2>
+
+      <p>
+        Accede al módulo del Centro Integral de Atención al Adulto Mayor.
+        Gestiona registros, seguimiento social y derivaciones.
+      </p>
+
+      <div class="login-illustration">
+        <span class="material-icons">elderly</span>
+      </div>
+
+    </div>
+
+    <div class="login-right">
+
+      <h2>Iniciar Sesión</h2>
+      <p class="sub">Acceso exclusivo para responsables CIAM</p>
+
+      <form (ngSubmit)="iniciarSesion()" #loginForm="ngForm">
+
+        <div class="input-group">
+          <span class="material-icons">person</span>
+          <input
+            type="text"
+            name="usuario"
+            [(ngModel)]="usuario"
+            placeholder="Usuario"
+            required>
+        </div>
+
+        <div class="input-group">
+          <span class="material-icons">lock</span>
+          <input
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            placeholder="Contraseña"
+            required>
+        </div>
+
+        @if (mensajeError) {
+          <p class="error">{{ mensajeError }}</p>
+        }
+
+        <button class="btn-login" type="submit" [disabled]="cargando">
+          {{ cargando ? 'Ingresando...' : 'Ingresar al módulo CIAM' }}
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>

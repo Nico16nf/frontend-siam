@@ -1,0 +1,124 @@
+<!-- BOTÓN HAMBURGUESA (MÓVIL) -->
+<div class="hamburger" (click)="toggleMenu()">
+  <span class="material-icons">menu</span>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" [class.open]="abierto">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <span class="material-icons">groups</span>
+    <h2>SIAM CIAM</h2>
+  </div>
+
+  <!-- PERFIL -->
+  <div class="perfil" (click)="irPerfil()">
+
+    <div class="avatar">
+      <span class="material-icons">person</span>
+    </div>
+
+    <div class="info">
+      <h4>{{ usuario?.nombres || 'Responsable CIAM' }}</h4>
+      <p>{{ usuario?.rol || 'CIAM' }}</p>
+    </div>
+
+    <span class="material-icons arrow">chevron_right</span>
+
+  </div>
+
+  <!-- MENÚ -->
+  <nav class="menu">
+
+    <a
+      routerLink="/ciam"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="cerrarMenu()">
+      <span class="material-icons">dashboard</span>
+      <span>Dashboard</span>
+    </a>
+
+    <a
+      routerLink="/ciam/registrar-adulto"
+      routerLinkActive="active"
+      (click)="cerrarMenu()">
+      <span class="material-icons">person_add</span>
+      <span>Registro adulto mayor</span>
+    </a>
+
+    <a
+      routerLink="/ciam/busqueda"
+      routerLinkActive="active"
+      (click)="cerrarMenu()">
+      <span class="material-icons">search</span>
+      <span>Búsqueda y Sisfoh</span>
+    </a>
+
+    <a
+      routerLink="/ciam/social"
+      routerLinkActive="active"
+      (click)="cerrarMenu()">
+      <span class="material-icons">family_restroom</span>
+      <span>Gestión social</span>
+    </a>
+
+    <a
+      routerLink="/ciam/evaluacion"
+      routerLinkActive="active"
+      (click)="cerrarMenu()">
+      <span class="material-icons">psychology</span>
+      <span>Evaluación</span>
+    </a>
+
+
+    <a
+      routerLink="/ciam/visitas"
+      routerLinkActive="active"
+      (click)="cerrarMenu()">
+      <span class="material-icons">home</span>
+      <span>Visitas</span>
+    </a>
+
+    <a
+      routerLink="/ciam/salud"
+      routerLinkActive="active"
+      (click)="cerrarMenu()">
+      <span class="material-icons">local_hospital</span>
+      <span>Salud</span>
+    </a>
+
+    <a
+      routerLink="/ciam/pension"
+      routerLinkActive="active"
+      (click)="cerrarMenu()">
+      <span class="material-icons">payments</span>
+      <span>Pensión 65</span>
+    </a>
+
+    <a
+      routerLink="/ciam/actividades"
+      routerLinkActive="active"
+      (click)="cerrarMenu()">
+      <span class="material-icons">event</span>
+      <span>Actividades</span>
+    </a>
+
+    <a
+      routerLink="/ciam/reportes"
+      routerLinkActive="active"
+      (click)="cerrarMenu()">
+      <span class="material-icons">bar_chart</span>
+      <span>Reportes</span>
+    </a>
+
+  </nav>
+
+  <!-- LOGOUT -->
+  <div class="logout" (click)="logout()">
+    <span class="material-icons">logout</span>
+    <span>Cerrar sesión</span>
+  </div>
+
+</aside>

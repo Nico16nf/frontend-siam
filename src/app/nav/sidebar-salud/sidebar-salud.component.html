@@ -1,0 +1,78 @@
+<aside class="sidebar-salud" [class.colapsado]="sidebarColapsado">
+
+  <div class="sidebar-header">
+    <div class="logo">
+      <div class="logo-icon">
+        <span class="material-icons">local_hospital</span>
+      </div>
+
+      @if (!sidebarColapsado) {
+        <div class="logo-text">
+          <h2>SIAM</h2>
+          <p>Panel Salud</p>
+        </div>
+      }
+    </div>
+
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <span class="material-icons">
+        {{ sidebarColapsado ? 'menu' : 'menu_open' }}
+      </span>
+    </button>
+  </div>
+
+  <div class="perfil" (click)="irPerfil()">
+    <div class="perfil-avatar">
+      <span class="material-icons">medical_services</span>
+    </div>
+
+    @if (!sidebarColapsado) {
+      <div class="perfil-info">
+        <h4>{{ usuario?.nombres || 'Personal Salud' }}</h4>
+        <p>{{ usuario?.rol || 'SALUD' }}</p>
+      </div>
+    }
+  </div>
+
+  <nav class="menu">
+
+    <a routerLink="/salud" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="item">
+      <span class="material-icons">dashboard</span>
+      @if (!sidebarColapsado) { <span>Dashboard</span> }
+    </a>
+
+    <a routerLink="/salud/pacientes" routerLinkActive="active" class="item">
+      <span class="material-icons">groups</span>
+      @if (!sidebarColapsado) { <span>Pacientes</span> }
+    </a>
+
+    <a routerLink="/salud/historial" routerLinkActive="active" class="item">
+      <span class="material-icons">folder_shared</span>
+      @if (!sidebarColapsado) { <span>Historial clínico</span> }
+    </a>
+
+    <a routerLink="/salud/visitas" routerLinkActive="active" class="item">
+      <span class="material-icons">home_health</span>
+      @if (!sidebarColapsado) { <span>Visitas médicas</span> }
+    </a>
+
+    <a routerLink="/salud/campanas" routerLinkActive="active" class="item">
+      <span class="material-icons">vaccines</span>
+      @if (!sidebarColapsado) { <span>Campañas</span> }
+    </a>
+
+    <a routerLink="/salud/agenda" routerLinkActive="active" class="item">
+      <span class="material-icons">event_note</span>
+      @if (!sidebarColapsado) { <span>Agenda médica</span> }
+    </a>
+
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="logout-btn" (click)="cerrarSesion()">
+      <span class="material-icons">logout</span>
+      @if (!sidebarColapsado) { <span>Cerrar sesión</span> }
+    </button>
+  </div>
+
+</aside>

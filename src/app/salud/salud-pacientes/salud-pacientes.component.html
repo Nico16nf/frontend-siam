@@ -1,0 +1,671 @@
+<div class="salud-pacientes-page">
+
+  <!-- HERO -->
+  <header class="hero-salud">
+
+    <div class="hero-icon">
+      <span class="material-icons">
+        local_hospital
+      </span>
+    </div>
+
+    <div class="hero-info">
+
+      <span class="tag">
+        Módulo Salud
+      </span>
+
+      <h1>
+        Gestión de Pacientes Derivados
+      </h1>
+
+      <p>
+        Administra derivaciones médicas enviadas desde CIAM,
+        registra diagnósticos clínicos, tratamientos,
+        controles y seguimientos médicos integrales.
+      </p>
+
+    </div>
+
+  </header>
+
+  <!-- FILTROS -->
+  <section class="panel-filtros">
+
+    <div class="titulo-bloque">
+
+      <div class="icono">
+        <span class="material-icons">
+          manage_search
+        </span>
+      </div>
+
+      <div>
+
+        <h2>
+          Búsqueda y filtros
+        </h2>
+
+        <p>
+          Busca pacientes derivados por nombre o DNI.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="filtros">
+
+      <!-- BUSQUEDA -->
+      <div class="campo">
+
+        <span class="material-icons">
+          search
+        </span>
+
+        <input
+          type="text"
+          placeholder="Buscar paciente..."
+          [(ngModel)]="busqueda"
+          (input)="filtrar()">
+
+      </div>
+
+      <!-- BOTONES -->
+      <button
+        class="btn-filtro"
+        (click)="cargarPendientes()">
+
+        <span class="material-icons">
+          pending_actions
+        </span>
+
+        Pendientes
+
+      </button>
+
+      <button
+        class="btn-filtro"
+        (click)="cargarAtendidas()">
+
+        <span class="material-icons">
+          check_circle
+        </span>
+
+        Atendidas
+
+      </button>
+
+      <button
+        class="btn-filtro"
+        (click)="cargarTodas()">
+
+        <span class="material-icons">
+          list
+        </span>
+
+        Todas
+
+      </button>
+
+      <button
+        class="btn-limpiar"
+        (click)="limpiar()">
+
+        <span class="material-icons">
+          refresh
+        </span>
+
+        Limpiar
+
+      </button>
+
+    </div>
+
+    <!-- MENSAJES -->
+    @if (mensaje) {
+
+      <div class="alerta exito">
+
+        <span class="material-icons">
+          check_circle
+        </span>
+
+        {{ mensaje }}
+
+      </div>
+
+    }
+
+    @if (error) {
+
+      <div class="alerta error">
+
+        <span class="material-icons">
+          error
+        </span>
+
+        {{ error }}
+
+      </div>
+
+    }
+
+  </section>
+
+  <!-- LAYOUT -->
+  <main class="layout-pacientes">
+
+    <!-- LISTADO -->
+    <section class="panel-lista">
+
+      <div class="section-title">
+
+        <div>
+          <h2>Pacientes derivados</h2>
+          <p>{{ derivacionesFiltradas.length }} pacientes encontrados</p>
+        </div>
+
+      </div>
+
+      <!-- CARGANDO -->
+      @if (cargando) {
+
+        <div class="empty">
+
+          <span class="material-icons">
+            hourglass_top
+          </span>
+
+          <h3>
+            Cargando pacientes...
+          </h3>
+
+        </div>
+
+      }
+
+      <!-- VACIO -->
+      @if (!cargando && derivacionesFiltradas.length === 0) {
+
+        <div class="empty">
+
+          <span class="material-icons">
+            folder_open
+          </span>
+
+          <h3>
+            No hay derivaciones
+          </h3>
+
+          <p>
+            No existen pacientes derivados actualmente.
+          </p>
+
+        </div>
+
+      }
+
+      <!-- CARDS -->
+      <div class="cards-pacientes">
+
+        @for (derivacion of derivacionesFiltradas; track derivacion.id) {
+
+          <article
+            class="paciente-card"
+            [class.activo]="derivacionSeleccionada?.id === derivacion.id"
+            (click)="seleccionarDerivacion(derivacion)">
+
+            <!-- TOP -->
+            <div class="card-top">
+
+              <div class="avatar">
+
+                @if (derivacion?.adultoMayor?.datosPersonales?.foto) {
+
+                  <img
+                    [src]="derivacion.adultoMayor.datosPersonales.foto"
+                    alt="Foto">
+
+                } @else {
+
+                  <span class="material-icons">
+                    person
+                  </span>
+
+                }
+
+              </div>
+
+              <div class="datos">
+
+                <h3>
+                  {{ nombreCompletoAdulto(derivacion?.adultoMayor) }}
+                </h3>
+
+                <p>
+                  DNI:
+                  {{ derivacion?.adultoMayor?.datosPersonales?.dni }}
+                </p>
+
+              </div>
+
+            </div>
+
+            <!-- CHIPS -->
+            <div class="chips">
+
+              <span
+                class="riesgo"
+                [class]="claseRiesgo(derivacion?.adultoMayor)">
+
+                {{ obtenerRiesgo(derivacion?.adultoMayor) }}
+
+              </span>
+
+              <span class="chip estado">
+                {{ derivacion?.estado }}
+              </span>
+
+              @if (derivacion?.prioridadAlta) {
+
+                <span class="chip prioridad">
+                  Prioridad Alta
+                </span>
+
+              }
+
+            </div>
+
+            <!-- INFO -->
+            <div class="derivacion-info">
+
+              <p>
+                <strong>Motivo:</strong>
+                {{ derivacion?.motivoDerivacion || '-' }}
+              </p>
+
+              <p>
+                <strong>Responsable CIAM:</strong>
+                {{ derivacion?.responsableCiam || '-' }}
+              </p>
+
+              <p>
+                <strong>Fecha:</strong>
+                {{ derivacion?.fechaDerivacion || '-' }}
+              </p>
+
+            </div>
+
+            <!-- ACCIONES -->
+            <div class="acciones-card">
+
+              <button class="btn-ver">
+
+                <span class="material-icons">
+                  visibility
+                </span>
+
+                Atender paciente
+
+              </button>
+
+              @if (derivacion?.estado === 'PENDIENTE') {
+
+                <button
+                  class="btn-cancelar"
+                  (click)="cancelarDerivacion(derivacion); $event.stopPropagation()">
+
+                  <span class="material-icons">
+                    cancel
+                  </span>
+
+                  Cancelar
+
+                </button>
+
+              }
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    </section>
+
+    <!-- PANEL DERECHO -->
+    <section
+      class="panel-atencion"
+      id="formAtencion">
+
+      <!-- VACIO -->
+      @if (!adultoSeleccionado) {
+
+        <div class="empty grande">
+
+          <span class="material-icons">
+            touch_app
+          </span>
+
+          <h3>
+            Seleccione un paciente
+          </h3>
+
+          <p>
+            Selecciona una derivación para registrar
+            la atención médica.
+          </p>
+
+        </div>
+
+      }
+
+      <!-- FORM -->
+      @if (adultoSeleccionado) {
+
+        <div class="atencion-box">
+
+          <!-- PERFIL -->
+          <div class="perfil-paciente">
+
+            <div class="avatar grande">
+
+              @if (adultoSeleccionado?.datosPersonales?.foto) {
+
+                <img
+                  [src]="adultoSeleccionado.datosPersonales.foto"
+                  alt="Foto">
+
+              } @else {
+
+                <span class="material-icons">
+                  person
+                </span>
+
+              }
+
+            </div>
+
+            <div>
+
+              <span class="tag-verde">
+                Paciente seleccionado
+              </span>
+
+              <h2>
+                {{ nombreCompletoAdulto(adultoSeleccionado) }}
+              </h2>
+
+              <p>
+                DNI:
+                {{ adultoSeleccionado?.datosPersonales?.dni }}
+              </p>
+
+            </div>
+
+          </div>
+
+          <!-- RESUMEN -->
+          <div class="resumen-derivacion">
+
+            <h3>
+
+              <span class="material-icons">
+                assignment
+              </span>
+
+              Información de derivación
+
+            </h3>
+
+            <p>
+              <strong>Motivo:</strong>
+              {{ derivacionSeleccionada?.motivoDerivacion }}
+            </p>
+
+            <p>
+              <strong>Observaciones:</strong>
+              {{ derivacionSeleccionada?.observaciones }}
+            </p>
+
+            <p>
+              <strong>Médico asignado:</strong>
+              {{ derivacionSeleccionada?.medicoAsignado || 'No asignado' }}
+            </p>
+
+          </div>
+
+          <!-- TITULO -->
+          <h3 class="form-title">
+
+            <span class="material-icons">
+              medical_services
+            </span>
+
+            Registrar atención médica
+
+          </h3>
+
+          <!-- FORMULARIO -->
+          <div class="form-grid">
+
+            <!-- FECHA -->
+            <div class="campo-form">
+
+              <label>Fecha atención</label>
+
+              <input
+                type="date"
+                [(ngModel)]="atencion.fechaAtencion">
+
+            </div>
+
+            <!-- MEDICO -->
+            <div class="campo-form">
+
+              <label>Médico responsable</label>
+
+              <input
+                type="text"
+                [(ngModel)]="atencion.medicoResponsable">
+
+            </div>
+
+            <!-- ESTABLECIMIENTO -->
+            <div class="campo-form">
+
+              <label>Establecimiento salud</label>
+
+              <input
+                type="text"
+                [(ngModel)]="atencion.establecimientoSalud">
+
+            </div>
+
+            <!-- TIPO -->
+            <div class="campo-form">
+
+              <label>Tipo atención</label>
+
+              <select
+                [(ngModel)]="atencion.tipoAtencion">
+
+                <option value="">
+                  Seleccione
+                </option>
+
+                <option value="CONSULTA">
+                  Consulta
+                </option>
+
+                <option value="CONTROL">
+                  Control
+                </option>
+
+                <option value="EMERGENCIA">
+                  Emergencia
+                </option>
+
+                <option value="VISITA_DOMICILIARIA">
+                  Visita domiciliaria
+                </option>
+
+                <option value="CAMPAÑA">
+                  Campaña
+                </option>
+
+              </select>
+
+            </div>
+
+            <!-- PRESION -->
+            <div class="campo-form">
+
+              <label>Presión arterial</label>
+
+              <input
+                type="text"
+                placeholder="120/80"
+                [(ngModel)]="atencion.presionArterial">
+
+            </div>
+
+            <!-- GLUCOSA -->
+            <div class="campo-form">
+
+              <label>Glucosa</label>
+
+              <input
+                type="number"
+                [(ngModel)]="atencion.glucosa">
+
+            </div>
+
+            <!-- PESO -->
+            <div class="campo-form">
+
+              <label>Peso</label>
+
+              <input
+                type="number"
+                [(ngModel)]="atencion.peso">
+
+            </div>
+
+            <!-- TALLA -->
+            <div class="campo-form">
+
+              <label>Talla</label>
+
+              <input
+                type="number"
+                [(ngModel)]="atencion.talla">
+
+            </div>
+
+            <!-- DIAGNOSTICO -->
+            <div class="campo-form full">
+
+              <label>Diagnóstico</label>
+
+              <textarea
+                rows="4"
+                [(ngModel)]="atencion.diagnostico"></textarea>
+
+            </div>
+
+            <!-- TRATAMIENTO -->
+            <div class="campo-form full">
+
+              <label>Tratamiento</label>
+
+              <textarea
+                rows="4"
+                [(ngModel)]="atencion.tratamiento"></textarea>
+
+            </div>
+
+            <!-- RECOMENDACIONES -->
+            <div class="campo-form full">
+
+              <label>Recomendaciones</label>
+
+              <textarea
+                rows="4"
+                [(ngModel)]="atencion.recomendaciones"></textarea>
+
+            </div>
+
+            <!-- CONTROL -->
+            <div class="campo-form">
+
+              <label>Próximo control</label>
+
+              <input
+                type="date"
+                [(ngModel)]="atencion.fechaProximoControl">
+
+            </div>
+
+          </div>
+
+          <!-- CHECK -->
+          <label class="check-card">
+
+            <input
+              type="checkbox"
+              [(ngModel)]="atencion.requiereSeguimiento">
+
+            <span class="material-icons">
+              monitor_heart
+            </span>
+
+            Requiere seguimiento médico
+
+          </label>
+
+          <!-- OBSERVACIONES -->
+          <div class="campo-form full observacion">
+
+            <label>Observaciones</label>
+
+            <textarea
+              rows="4"
+              [(ngModel)]="atencion.observaciones"></textarea>
+
+          </div>
+
+          <!-- BOTON -->
+          <div class="acciones">
+
+            <button
+              class="btn-guardar"
+              (click)="registrarAtencion()"
+              [disabled]="guardando">
+
+              <span class="material-icons">
+                save
+              </span>
+
+              @if (guardando) {
+                Guardando atención...
+              } @else {
+                Guardar atención médica
+              }
+
+            </button>
+
+          </div>
+
+        </div>
+
+      }
+
+    </section>
+
+  </main>
+
+</div>

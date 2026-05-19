@@ -1,0 +1,286 @@
+<div class="ciam-salud-page">
+
+  <header class="hero-salud">
+    <div class="hero-icon">
+      <span class="material-icons">medical_services</span>
+    </div>
+
+    <div>
+      <span class="tag">Módulo CIAM</span>
+      <h1>Derivación a Salud</h1>
+      <p>Deriva adultos mayores al centro de salud para que el médico registre diagnóstico y tratamiento.</p>
+    </div>
+  </header>
+
+  <section class="panel-busqueda">
+
+    <div class="titulo-bloque">
+      <span class="material-icons">manage_search</span>
+      <div>
+        <h2>Buscar adulto mayor</h2>
+        <p>Seleccione un adulto mayor y revise su condición integral antes de derivarlo.</p>
+      </div>
+    </div>
+
+    <div class="buscador">
+      <div class="campo">
+        <span class="material-icons">search</span>
+        <input
+          type="text"
+          placeholder="Buscar por DNI o nombre..."
+          [(ngModel)]="busqueda"
+          (input)="filtrar()">
+      </div>
+
+      <button class="btn-secundario" (click)="limpiarTodo()">
+        <span class="material-icons">refresh</span>
+        Limpiar
+      </button>
+    </div>
+
+    @if (mensaje) {
+      <div class="alerta exito">
+        <span class="material-icons">check_circle</span>
+        {{ mensaje }}
+      </div>
+    }
+
+    @if (error) {
+      <div class="alerta error">
+        <span class="material-icons">error</span>
+        {{ error }}
+      </div>
+    }
+
+  </section>
+
+  <main class="layout-salud">
+
+    <section class="lista-adultos">
+
+      <div class="section-title">
+        <h2>Adultos mayores</h2>
+        <p>{{ adultosFiltrados.length }} registros encontrados</p>
+      </div>
+
+      <div class="cards-lista">
+
+        @for (adulto of adultosFiltrados; track adulto.id) {
+          <article
+            class="adulto-card"
+            [class.seleccionado]="adultoSeleccionado?.id === adulto.id"
+            (click)="seleccionarAdulto(adulto)">
+
+            <div class="card-top">
+              <div class="avatar">
+                @if (adulto?.datosPersonales?.foto) {
+                  <img [src]="adulto.datosPersonales.foto" alt="Foto">
+                } @else {
+                  <span class="material-icons">person</span>
+                }
+              </div>
+
+              <div>
+                <h3>{{ nombreCompleto(adulto) }}</h3>
+                <p>DNI: {{ adulto?.datosPersonales?.dni }}</p>
+              </div>
+            </div>
+
+            <div class="chips">
+              <span [class]="claseRiesgo(adulto)">
+                {{ obtenerRiesgo(adulto) }}
+              </span>
+
+              @if (adulto?.informacionSocial?.viveSolo) {
+                <span class="chip alerta">Vive solo</span>
+              }
+
+              @if (adulto?.informacionSocial?.situacionAbandono) {
+                <span class="chip peligro">Abandono</span>
+              }
+
+              @if (adulto?.informacionSocial?.victimaViolencia) {
+                <span class="chip peligro">Violencia</span>
+              }
+
+              @if (tieneDerivacionPendiente(adulto)) {
+                <span class="chip pendiente">Ya derivado</span>
+              }
+            </div>
+
+          </article>
+        }
+
+      </div>
+
+    </section>
+
+    <section class="panel-derivacion">
+
+      @if (!adultoSeleccionado) {
+        <div class="empty-state">
+          <span class="material-icons">touch_app</span>
+          <h2>Seleccione un adulto mayor</h2>
+          <p>Luego podrá decidir si corresponde derivarlo al módulo de Salud.</p>
+        </div>
+      }
+
+      @if (adultoSeleccionado) {
+
+        <div class="derivacion-box">
+
+          <div class="perfil">
+            <div class="avatar grande">
+              @if (adultoSeleccionado?.datosPersonales?.foto) {
+                <img [src]="adultoSeleccionado.datosPersonales.foto" alt="Foto">
+              } @else {
+                <span class="material-icons">person</span>
+              }
+            </div>
+
+            <div>
+              <span class="tag-verde">Paciente seleccionado</span>
+              <h2>{{ nombreCompleto(adultoSeleccionado) }}</h2>
+              <p>DNI: {{ adultoSeleccionado?.datosPersonales?.dni }}</p>
+            </div>
+          </div>
+
+          <div class="condicion-grid">
+
+            <div class="condicion-card">
+              <span class="material-icons">monitor_heart</span>
+              <small>Riesgo integral</small>
+              <strong [class]="claseRiesgo(adultoSeleccionado)">
+                {{ obtenerRiesgo(adultoSeleccionado) }}
+              </strong>
+            </div>
+
+            <div class="condicion-card">
+              <span class="material-icons">directions_walk</span>
+              <small>Estado físico</small>
+              <strong>{{ adultoSeleccionado?.evaluacionIntegral?.estadoFisico || 'No registrado' }}</strong>
+            </div>
+
+            <div class="condicion-card">
+              <span class="material-icons">psychology</span>
+              <small>Estado mental</small>
+              <strong>{{ adultoSeleccionado?.evaluacionIntegral?.estadoMental || 'No registrado' }}</strong>
+            </div>
+
+            <div class="condicion-card">
+              <span class="material-icons">favorite</span>
+              <small>Estado emocional</small>
+              <strong>{{ adultoSeleccionado?.evaluacionIntegral?.estadoEmocional || 'No registrado' }}</strong>
+            </div>
+
+          </div>
+
+          <div class="alertas-sociales">
+
+            @if (adultoSeleccionado?.informacionSocial?.situacionAbandono) {
+              <div class="alerta-mini peligro">
+                <span class="material-icons">warning</span>
+                Situación de abandono
+              </div>
+            }
+
+            @if (adultoSeleccionado?.informacionSocial?.victimaViolencia) {
+              <div class="alerta-mini peligro">
+                <span class="material-icons">report</span>
+                Posible violencia familiar
+              </div>
+            }
+
+            @if (adultoSeleccionado?.informacionSocial?.viveSolo) {
+              <div class="alerta-mini advertencia">
+                <span class="material-icons">person</span>
+                Vive solo
+              </div>
+            }
+
+            @if (!esPrioridadAlta(adultoSeleccionado)) {
+              <div class="alerta-mini estable">
+                <span class="material-icons">check_circle</span>
+                No presenta prioridad alta automática
+              </div>
+            }
+
+          </div>
+
+          <div class="formulario">
+
+            <h3>
+              <span class="material-icons">send</span>
+              Datos de derivación
+            </h3>
+
+            <div class="form-grid">
+
+              <div class="campo-form">
+                <label>Responsable CIAM</label>
+                <input
+                  type="text"
+                  placeholder="Nombre del responsable"
+                  [(ngModel)]="derivacion.responsableCiam">
+              </div>
+
+              <div class="campo-form">
+                <label>Médico asignado / centro de salud</label>
+                <input
+                  type="text"
+                  placeholder="Opcional"
+                  [(ngModel)]="derivacion.medicoAsignado">
+              </div>
+
+              <div class="campo-form full">
+                <label>Motivo de derivación</label>
+                <input
+                  type="text"
+                  placeholder="Ejemplo: riesgo alto, deterioro físico, abandono..."
+                  [(ngModel)]="derivacion.motivoDerivacion">
+              </div>
+
+              <div class="campo-form full">
+                <label>Observaciones para Salud</label>
+                <textarea
+                  rows="5"
+                  placeholder="Describa por qué se deriva y qué debe revisar el médico..."
+                  [(ngModel)]="derivacion.observaciones">
+                </textarea>
+              </div>
+
+            </div>
+
+            <label class="check-prioridad">
+              <input type="checkbox" [(ngModel)]="derivacion.prioridadAlta">
+              <span class="material-icons">priority_high</span>
+              Marcar como prioridad alta
+            </label>
+
+            <div class="acciones">
+              <button
+                class="btn-derivar"
+                (click)="derivarASalud()"
+                [disabled]="guardando || tieneDerivacionPendiente(adultoSeleccionado)">
+                <span class="material-icons">local_hospital</span>
+
+                @if (guardando) {
+                  Derivando...
+                } @else if (tieneDerivacionPendiente(adultoSeleccionado)) {
+                  Ya tiene derivación pendiente
+                } @else {
+                  Derivar a Salud
+                }
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+      }
+
+    </section>
+
+  </main>
+
+</div>

@@ -1,0 +1,244 @@
+<section class="beneficiarios-container">
+
+  <!-- HEADER -->
+  <div class="header">
+
+    <div>
+      <h1>Beneficiarios Activos - Pensión 65</h1>
+
+      <p>
+        Lista de adultos mayores afiliados y activos
+        en el programa Pensión 65.
+      </p>
+    </div>
+
+    <button
+      class="btn-recargar"
+      (click)="listarBeneficiarios()">
+
+      <span class="material-icons">
+        refresh
+      </span>
+
+      Recargar
+    </button>
+
+  </div>
+
+  <!-- ALERTAS -->
+  @if (mensaje) {
+
+    <div class="alert success">
+      {{ mensaje }}
+    </div>
+
+  }
+
+  @if (error) {
+
+    <div class="alert error">
+      {{ error }}
+    </div>
+
+  }
+
+  <!-- BUSCADOR -->
+  <div class="buscador">
+
+    <div class="input-box">
+
+      <span class="material-icons">
+        search
+      </span>
+
+      <input
+        type="text"
+        placeholder="Buscar por DNI o nombres..."
+        [(ngModel)]="busqueda"
+        (input)="filtrar()">
+
+    </div>
+
+  </div>
+
+  <!-- TABLA -->
+  <div class="tabla-card">
+
+    <div class="tabla-header">
+
+      <h2>
+        Beneficiarios registrados
+      </h2>
+
+      <span class="contador">
+        {{ beneficiariosFiltrados.length }}
+        beneficiarios
+      </span>
+
+    </div>
+
+    @if (cargando) {
+
+      <div class="loading">
+        Cargando beneficiarios...
+      </div>
+
+    } @else {
+
+      <div class="tabla-responsive">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>DNI</th>
+
+              <th>Adulto Mayor</th>
+
+              <th>Estado</th>
+
+              <th>Afiliación</th>
+
+              <th>Último Pago</th>
+
+              <th>Monto</th>
+
+              <th>Próximo Pago</th>
+
+              <th>Acción</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            @for (beneficiario of beneficiariosFiltrados; track beneficiario.idPension) {
+
+              <tr>
+
+                <!-- DNI -->
+                <td>
+
+                  {{ beneficiario.dni }}
+
+                </td>
+
+                <!-- NOMBRE -->
+                <td>
+
+                  <div class="persona">
+
+                    <div class="avatar">
+
+                      <span class="material-icons">
+                        elderly
+                      </span>
+
+                    </div>
+
+                    <div>
+
+                      <strong>
+
+                        {{ beneficiario.nombres }}
+                        {{ beneficiario.apellidoPaterno }}
+                        {{ beneficiario.apellidoMaterno }}
+
+                      </strong>
+
+                      <small>
+                        Beneficiario activo
+                      </small>
+
+                    </div>
+
+                  </div>
+
+                </td>
+
+                <!-- ESTADO -->
+                <td>
+
+                  <span
+                    [class]="claseEstado(beneficiario.estado)">
+
+                    {{ beneficiario.estado }}
+
+                  </span>
+
+                </td>
+
+                <!-- AFILIACION -->
+                <td>
+
+                  {{ beneficiario.fechaAfiliacion }}
+
+                </td>
+
+                <!-- ULTIMO PAGO -->
+                <td>
+
+                  {{ beneficiario.fechaUltimoPago }}
+
+                </td>
+
+                <!-- MONTO -->
+                <td>
+
+                  <strong class="monto">
+                    S/ {{ beneficiario.montoUltimoPago }}
+                  </strong>
+
+                </td>
+
+                <!-- PROXIMO PAGO -->
+                <td>
+
+                  {{ beneficiario.fechaProximoPago }}
+
+                </td>
+
+                <!-- BOTON -->
+                <td>
+
+                  <button
+                    class="btn-pago"
+                    (click)="registrarPago(beneficiario)">
+
+                    Registrar Pago
+                  </button>
+
+                </td>
+
+              </tr>
+
+            } @empty {
+
+              <tr>
+
+                <td
+                  colspan="8"
+                  class="vacio">
+
+                  No hay beneficiarios activos registrados.
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    }
+
+  </div>
+
+</section>

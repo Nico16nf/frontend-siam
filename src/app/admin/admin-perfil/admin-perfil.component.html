@@ -1,0 +1,98 @@
+<div class="perfil-container">
+
+  <div class="perfil-card">
+
+    <div class="perfil-header">
+      <div>
+        <h2>Mi perfil</h2>
+        <p>Consulta y actualiza tu información personal del sistema.</p>
+      </div>
+
+      <button type="button" class="btn-editar" *ngIf="!editando" (click)="activarEdicion()">
+        <span class="material-icons">edit</span>
+        Editar perfil
+      </button>
+    </div>
+
+    <form class="formulario" (ngSubmit)="actualizarPerfil()">
+
+      <div class="foto-section">
+        <div class="preview">
+          <img *ngIf="previewImage; else placeholder" [src]="previewImage">
+          <ng-template #placeholder>
+            <span class="material-icons">person</span>
+          </ng-template>
+        </div>
+
+        <div>
+          <label class="foto-label">Foto de perfil</label>
+          <input type="file" accept="image/*" (change)="onFileSelected($event)" [disabled]="!editando">
+        </div>
+      </div>
+
+      <div class="fila">
+        <div class="campo">
+          <label>Nombres</label>
+          <input type="text" [(ngModel)]="perfil.nombres" name="nombres" required [readonly]="!editando">
+        </div>
+
+        <div class="campo">
+          <label>Apellidos</label>
+          <input type="text" [(ngModel)]="perfil.apellidos" name="apellidos" required [readonly]="!editando">
+        </div>
+      </div>
+
+      <div class="fila">
+        <div class="campo">
+          <label>DNI</label>
+          <input type="text" maxlength="8" [(ngModel)]="perfil.dni" name="dni" required [readonly]="!editando">
+        </div>
+
+        <div class="campo">
+          <label>Teléfono</label>
+          <input type="text" maxlength="9" [(ngModel)]="perfil.telefono" name="telefono" [readonly]="!editando">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="perfil.email" name="email" required [readonly]="!editando">
+      </div>
+
+      <div class="fila">
+        <div class="campo">
+          <label>Usuario</label>
+          <input type="text" [(ngModel)]="perfil.usuario" name="usuario" required [readonly]="!editando">
+        </div>
+
+        <div class="campo" *ngIf="editando">
+          <label>Contraseña actual o nueva</label>
+          <input type="password" [(ngModel)]="perfil.password" name="password" placeholder="Mínimo 6 caracteres">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Rol</label>
+        <input type="text" [(ngModel)]="perfil.rol" name="rol" readonly>
+      </div>
+
+      <div class="acciones" *ngIf="editando">
+        <button type="submit" class="btn-guardar">
+          <span class="material-icons">save</span>
+          Guardar cambios
+        </button>
+
+        <button type="button" class="btn-cancelar" (click)="cancelarEdicion()">
+          <span class="material-icons">close</span>
+          Cancelar
+        </button>
+      </div>
+
+      <div class="mensaje" *ngIf="mensaje">{{ mensaje }}</div>
+      <div class="error" *ngIf="error">{{ error }}</div>
+
+    </form>
+
+  </div>
+
+</div>

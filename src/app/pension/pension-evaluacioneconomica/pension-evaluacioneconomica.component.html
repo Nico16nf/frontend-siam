@@ -1,0 +1,227 @@
+<section class="pension-container">
+
+  <div class="header">
+    <div>
+      <h1>Evaluación Económica Pensión 65</h1>
+      <p>Lista adultos mayores registrados y evalúa si califican como beneficiarios.</p>
+    </div>
+
+    <button class="btn-recargar" (click)="listarAdultos()">
+      <span class="material-icons">refresh</span>
+      Recargar
+    </button>
+  </div>
+
+  @if (mensaje) {
+    <div class="alert success">{{ mensaje }}</div>
+  }
+
+  @if (error) {
+    <div class="alert error">{{ error }}</div>
+  }
+
+  <div class="filtros">
+    <div class="input-box">
+      <span class="material-icons">search</span>
+      <input
+        type="text"
+        placeholder="Buscar por DNI, nombres o apellidos..."
+        [(ngModel)]="busqueda"
+        (input)="filtrar()">
+    </div>
+
+    <select [(ngModel)]="filtroEstado" (change)="filtrar()">
+      <option value="TODOS">Todos</option>
+      <option value="SIN_EVALUAR">Sin evaluar</option>
+      <option value="BENEFICIARIO">Beneficiario</option>
+      <option value="PENDIENTE">Pendiente</option>
+      <option value="NO_CALIFICA">No califica</option>
+      <option value="SUSPENDIDO">Suspendido</option>
+      <option value="ACTIVO">Activo</option>
+    </select>
+  </div>
+
+  <div class="contenido">
+
+    <div class="tabla-card">
+      <h2>Adultos mayores registrados</h2>
+
+      @if (cargando) {
+        <div class="loading">Cargando adultos mayores...</div>
+      } @else {
+        <div class="tabla-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>DNI</th>
+                <th>Adulto Mayor</th>
+                <th>Edad</th>
+                <th>SISFOH</th>
+                <th>Estado P65</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (adulto of adultosFiltrados; track adulto.id) {
+                <tr [class.seleccionado]="adultoSeleccionado?.id === adulto.id">
+                  <td>{{ adulto.dni || 'Sin DNI' }}</td>
+
+                  <td>
+                    <strong>
+                      {{ adulto.nombres }}
+                      {{ adulto.apellidoPaterno }}
+                      {{ adulto.apellidoMaterno }}
+                    </strong>
+                    <small>{{ adulto.distrito || 'Sin ubicación' }}</small>
+                  </td>
+
+                  <td>{{ adulto.edad || 0 }} años</td>
+
+                  <td>{{ adulto.clasificacionSisfoh || 'SIN_SISFOH' }}</td>
+
+                  <td>
+                    <span [class]="claseEstado(obtenerEstado(adulto))">
+                      {{ obtenerEstado(adulto) }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <button class="btn-evaluar" (click)="seleccionarAdulto(adulto)">
+                      Seleccionar
+                    </button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="6" class="vacio">
+                    No hay adultos mayores registrados.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+    <div class="panel-evaluacion">
+      @if (adultoSeleccionado) {
+
+        <h2>Evaluación económica</h2>
+
+        <div class="perfil">
+          <div class="avatar">
+            <span class="material-icons">elderly</span>
+          </div>
+
+          <div>
+            <h3>
+              {{ adultoSeleccionado.nombres }}
+              {{ adultoSeleccionado.apellidoPaterno }}
+            </h3>
+            <p>DNI: {{ adultoSeleccionado.dni || 'No registrado' }}</p>
+          </div>
+        </div>
+
+        <div class="criterios">
+          <div>
+            <span>Edad mínima 65 años</span>
+            <strong>
+              {{ adultoSeleccionado.edad >= 65 ? 'Cumple' : 'No cumple' }}
+            </strong>
+          </div>
+
+          <div>
+            <span>DNI válido</span>
+            <strong>
+              {{ adultoSeleccionado.dni?.length === 8 ? 'Cumple' : 'No cumple' }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Clasificación SISFOH</span>
+            <strong>{{ adultoSeleccionado.clasificacionSisfoh }}</strong>
+          </div>
+
+          <div>
+            <span>SISFOH vigente</span>
+            <strong>
+              {{ adultoSeleccionado.sisfohVigente ? 'Vigente' : 'No vigente' }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Estado actual</span>
+            <strong>{{ obtenerEstado(adultoSeleccionado) }}</strong>
+          </div>
+        </div>
+
+        <button
+          class="btn-principal"
+          (click)="evaluarAdulto()"
+          [disabled]="evaluando">
+          {{ evaluando ? 'Evaluando...' : 'Realizar evaluación económica' }}
+        </button>
+
+        @if (evaluacionResultado) {
+          <div class="resultado">
+            <h3>Resultado de Pensión 65</h3>
+
+            <p>
+              <strong>Estado:</strong>
+              <span [class]="claseEstado(evaluacionResultado.estado)">
+                {{ evaluacionResultado.estado || 'SIN_EVALUAR' }}
+              </span>
+            </p>
+
+            <p>
+              <strong>Beneficiario:</strong>
+              {{ evaluacionResultado.beneficiario ? 'Sí' : 'No' }}
+            </p>
+
+            <p>
+              <strong>Posible beneficiario:</strong>
+              {{ evaluacionResultado.posibleBeneficiario ? 'Sí' : 'No' }}
+            </p>
+
+            <p>
+              <strong>Fecha de afiliación:</strong>
+              {{ evaluacionResultado.fechaAfiliacion || 'No asignada' }}
+            </p>
+
+            <p>
+              <strong>Último pago:</strong>
+              {{ evaluacionResultado.fechaUltimoPago || 'Sin pago registrado' }}
+            </p>
+
+            <p>
+              <strong>Monto:</strong>
+              S/ {{ evaluacionResultado.montoUltimoPago || 0 }}
+            </p>
+
+            <p>
+              <strong>Observación:</strong>
+              {{ evaluacionResultado.observaciones || 'Sin observaciones' }}
+            </p>
+
+            @if (evaluacionResultado.beneficiario) {
+              <button class="btn-pago" (click)="registrarPago(adultoSeleccionado.id)">
+                Registrar pago de S/ 350
+              </button>
+            }
+          </div>
+        }
+
+      } @else {
+        <div class="sin-seleccion">
+          <span class="material-icons">assignment</span>
+          <h3>Seleccione un adulto mayor</h3>
+          <p>Elija un registro de la tabla para evaluar si califica a Pensión 65.</p>
+        </div>
+      }
+    </div>
+
+  </div>
+
+</section>

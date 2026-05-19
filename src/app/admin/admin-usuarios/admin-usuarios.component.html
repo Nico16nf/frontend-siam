@@ -1,0 +1,191 @@
+<div class="usuarios-container">
+
+  <div class="card">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div>
+        <h2><span class="material-icons">groups</span> Gestión de usuarios</h2>
+        <p>Administra accesos, roles, seguridad y actividad del sistema.</p>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <form class="formulario" (ngSubmit)="guardar()">
+
+      <!-- FOTO -->
+      <div class="foto-section">
+        <div class="preview">
+          <img *ngIf="previewImage; else placeholder" [src]="previewImage">
+          <ng-template #placeholder>
+            <span class="material-icons">person</span>
+          </ng-template>
+        </div>
+
+        <div class="foto-info">
+          <label><span class="material-icons">image</span> Foto</label>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*">
+        </div>
+      </div>
+
+      <!-- CAMPOS -->
+      <div class="fila">
+        <div class="campo">
+          <label>Nombres</label>
+          <input type="text" [(ngModel)]="usuario.nombres" name="nombres">
+        </div>
+
+        <div class="campo">
+          <label>Apellidos</label>
+          <input type="text" [(ngModel)]="usuario.apellidos" name="apellidos">
+        </div>
+      </div>
+
+      <div class="fila">
+        <div class="campo">
+          <label>DNI</label>
+          <input type="text" maxlength="8" [(ngModel)]="usuario.dni" name="dni">
+        </div>
+
+        <div class="campo">
+          <label>Teléfono</label>
+          <input type="text" maxlength="9" [(ngModel)]="usuario.telefono" name="telefono">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="usuario.email" name="email">
+      </div>
+
+      <div class="fila">
+        <div class="campo">
+          <label>Usuario</label>
+          <input type="text" [(ngModel)]="usuario.usuario" name="usuario">
+        </div>
+
+        <!-- PASSWORD CON VISUAL -->
+        <div class="campo password-box">
+          <label>Contraseña</label>
+
+          <div class="password-input">
+            <input [type]="verPassword ? 'text' : 'password'" [(ngModel)]="usuario.password" name="password">
+
+            <button type="button" (click)="toggleVerPassword()">
+              <span class="material-icons">
+                {{ verPassword ? 'visibility_off' : 'visibility' }}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Rol</label>
+        <select [(ngModel)]="usuario.rol" name="rol">
+          <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+        </select>
+      </div>
+
+      <!-- BOTONES -->
+      <div class="acciones">
+        <button type="submit" class="btn-main">
+          <span class="material-icons">{{ modoEdicion ? 'save' : 'person_add' }}</span>
+          {{ modoEdicion ? 'Guardar' : 'Crear' }}
+        </button>
+
+        <button type="button" class="btn-cancelar" *ngIf="modoEdicion" (click)="cancelarEdicion()">
+          Cancelar
+        </button>
+      </div>
+
+    </form>
+
+    <!-- TABLA -->
+    <div class="tabla-usuarios">
+
+      <h3><span class="material-icons">table_chart</span> Usuarios registrados</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Nombre</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Login</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let u of usuarios">
+
+            <td>
+              <img *ngIf="u.foto" [src]="u.foto" class="foto-tabla">
+            </td>
+
+            <td>
+              <strong>{{ u.nombres }}</strong><br>
+              <span class="sub">{{ u.email }}</span>
+            </td>
+
+            <td>
+              <span class="badge rol">{{ u.rol }}</span>
+            </td>
+
+            <td>
+              <span class="badge" [class.activo]="u.activo" [class.inactivo]="!u.activo">
+                {{ u.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+
+              <span class="badge bloqueado" *ngIf="u.bloqueado">
+                Bloqueado
+              </span>
+            </td>
+
+            <td class="login">
+              {{ formatearFecha(u.ultimoLogin) }}
+            </td>
+
+            <td class="acciones-tabla">
+
+              <button type="button" class="btn-accion editar" (click)="editarUsuario(u)" title="Editar usuario">
+                <span class="material-icons">edit</span>
+                <small>Editar</small>
+              </button>
+
+              <button type="button" class="btn-accion estado" (click)="cambiarEstado(u)"
+                title="Activar o desactivar cuenta">
+                <span class="material-icons">
+                  {{ u.activo ? 'toggle_off' : 'toggle_on' }}
+                </span>
+                <small>{{ u.activo ? 'Desactivar' : 'Activar' }}</small>
+              </button>
+
+              <button type="button" class="btn-accion bloqueo"
+                (click)="u.bloqueado ? desbloquearUsuario(u) : bloquearUsuario(u)"
+                title="Bloquear o desbloquear usuario">
+                <span class="material-icons">
+                  {{ u.bloqueado ? 'lock_open' : 'lock' }}
+                </span>
+                <small>{{ u.bloqueado ? 'Desbloquear' : 'Bloquear' }}</small>
+              </button>
+
+              <button type="button" class="btn-accion reset" (click)="resetearPassword(u)"
+                title="Restablecer contraseña">
+                <span class="material-icons">key</span>
+                <small>Reset clave</small>
+              </button>
+
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,64 @@
+<nav class="navbar">
+
+  <!-- 🔷 Logo -->
+  <div class="logo-container" routerLink="/inicio">
+    <img src="assets/Icon1.png" alt="Logo" class="logo">
+
+    <div class="titulo">
+      <h1>Mi Adulto Mayor</h1>
+      <p>Sistema Integral del Adulto Mayor</p>
+    </div>
+  </div>
+
+  <!-- 🔶 BOTONES DESKTOP -->
+  <div class="nav-desktop">
+    <a routerLink="/consulta" routerLinkActive="active" class="btn">
+      <span class="material-icons">search</span>
+      Consultar Pago
+    </a>
+
+    <a routerLink="/accesos" routerLinkActive="active" class="btn acceso">
+      <span class="material-icons">login</span>
+      Iniciar Sesión
+    </a>
+  </div>
+
+  <!-- ☰ Móvil -->
+  <button class="menu-toggle" (click)="toggleMenu()">
+    <span class="material-icons">menu</span>
+  </button>
+
+</nav>
+
+<!-- 🔥 SIDEBAR (solo móvil) -->
+<div class="sidebar" [class.active]="menuOpen">
+
+  <div class="sidebar-header">
+
+    <div class="sidebar-logo" routerLink="/inicio" (click)="toggleMenu()">
+      <img src="assets/LogoP.png" class="logo">
+    </div>
+
+    <button class="close-btn" (click)="toggleMenu()">
+      <span class="material-icons">close</span>
+    </button>
+
+  </div>
+
+  <nav class="sidebar-links">
+    <a routerLink="/consulta" (click)="toggleMenu()">
+      <span class="material-icons">search</span>
+      Consultar Pago
+    </a>
+
+    <a routerLink="/accesos" (click)="toggleMenu()" class="acceso">
+      <span class="material-icons">login</span>
+      Iniciar Sesión
+    </a>
+  </nav>
+
+</div>
+
+@if (menuOpen) {
+  <div class="overlay" (click)="toggleMenu()"></div>
+}

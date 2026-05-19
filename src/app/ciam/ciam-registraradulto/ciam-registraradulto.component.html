@@ -1,0 +1,363 @@
+<div class="registro-adulto">
+
+  <!-- ENCABEZADO -->
+  <div class="encabezado">
+    <div class="encabezado-icono">
+      <span class="material-icons">elderly</span>
+    </div>
+
+    <div>
+      <h1>Registrar Adulto Mayor</h1>
+      <p>Complete los datos principales del adulto mayor para el padrón del CIAM.</p>
+    </div>
+  </div>
+
+  <form class="formulario" (ngSubmit)="registrarAdultoMayor()">
+
+    <!-- DATOS PERSONALES -->
+    <section class="bloque">
+      <div class="titulo-bloque">
+        <span class="material-icons">badge</span>
+        <div>
+          <h2>Datos personales</h2>
+          <p>Información básica e identificación del adulto mayor.</p>
+        </div>
+      </div>
+
+      <div class="foto-contenedor">
+        <div class="foto-preview">
+          @if (previewFoto) {
+            <img [src]="previewFoto" alt="Foto adulto mayor">
+          } @else {
+            <span class="material-icons">person</span>
+          }
+        </div>
+
+        <label class="btn-foto">
+          <span class="material-icons">photo_camera</span>
+          Subir foto
+          <input type="file" accept="image/*" (change)="seleccionarFoto($event)">
+        </label>
+      </div>
+
+      <div class="grid">
+        <div class="campo">
+          <span class="material-icons">credit_card</span>
+          <input type="text" placeholder="DNI" maxlength="8"
+                 [(ngModel)]="adultoMayor.datosPersonales.dni"
+                 name="dni" required>
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">person</span>
+          <input type="text" placeholder="Nombres"
+                 [(ngModel)]="adultoMayor.datosPersonales.nombres"
+                 name="nombres" required>
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">person_outline</span>
+          <input type="text" placeholder="Apellido paterno"
+                 [(ngModel)]="adultoMayor.datosPersonales.apellidoPaterno"
+                 name="apellidoPaterno" required>
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">person_outline</span>
+          <input type="text" placeholder="Apellido materno"
+                 [(ngModel)]="adultoMayor.datosPersonales.apellidoMaterno"
+                 name="apellidoMaterno" required>
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">wc</span>
+          <select [(ngModel)]="adultoMayor.datosPersonales.sexo" name="sexo" required>
+            <option value="">Sexo</option>
+            <option value="MASCULINO">Masculino</option>
+            <option value="FEMENINO">Femenino</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">calendar_month</span>
+          <input type="date"
+                 [(ngModel)]="adultoMayor.datosPersonales.fechaNacimiento"
+                 name="fechaNacimiento" required>
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">phone</span>
+          <input type="text" placeholder="Celular"
+                 [(ngModel)]="adultoMayor.datosPersonales.celular"
+                 name="celular">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">mail</span>
+          <input type="email" placeholder="Correo"
+                 [(ngModel)]="adultoMayor.datosPersonales.correo"
+                 name="correo">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">favorite</span>
+          <select [(ngModel)]="adultoMayor.datosPersonales.estadoCivil" name="estadoCivil">
+            <option value="">Estado civil</option>
+            <option value="SOLTERO">Soltero</option>
+            <option value="CASADO">Casado</option>
+            <option value="VIUDO">Viudo</option>
+            <option value="DIVORCIADO">Divorciado</option>
+            <option value="CONVIVIENTE">Conviviente</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- LUGAR DE NACIMIENTO -->
+    <section class="bloque">
+      <div class="titulo-bloque">
+        <span class="material-icons">place</span>
+        <div>
+          <h2>Lugar de nacimiento</h2>
+          <p>Datos del lugar donde nació el adulto mayor.</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="campo">
+          <span class="material-icons">map</span>
+          <input type="text" placeholder="Departamento de nacimiento"
+                 [(ngModel)]="adultoMayor.lugarNacimiento.departamentoNacimiento"
+                 name="departamentoNacimiento">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">location_city</span>
+          <input type="text" placeholder="Provincia de nacimiento"
+                 [(ngModel)]="adultoMayor.lugarNacimiento.provinciaNacimiento"
+                 name="provinciaNacimiento">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">pin_drop</span>
+          <input type="text" placeholder="Distrito de nacimiento"
+                 [(ngModel)]="adultoMayor.lugarNacimiento.distritoNacimiento"
+                 name="distritoNacimiento">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">holiday_village</span>
+          <input type="text" placeholder="Comunidad / Anexo de nacimiento"
+                 [(ngModel)]="adultoMayor.lugarNacimiento.comunidadNacimiento"
+                 name="comunidadNacimiento">
+        </div>
+      </div>
+    </section>
+
+    <!-- UBICACIÓN ACTUAL -->
+    <section class="bloque">
+      <div class="titulo-bloque">
+        <div>
+          <h2>Ubicación actual</h2>
+          <p>Dirección actual y datos territoriales del adulto mayor.</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="campo">
+          <span class="material-icons">map</span>
+          <input type="text" placeholder="Departamento"
+                 [(ngModel)]="adultoMayor.ubicacionActual.departamento"
+                 name="departamento">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">location_city</span>
+          <input type="text" placeholder="Provincia"
+                 [(ngModel)]="adultoMayor.ubicacionActual.provincia"
+                 name="provincia">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">pin_drop</span>
+          <input type="text" placeholder="Distrito"
+                 [(ngModel)]="adultoMayor.ubicacionActual.distrito"
+                 name="distrito">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">villa</span>
+          <input type="text" placeholder="Centro poblado"
+                 [(ngModel)]="adultoMayor.ubicacionActual.centroPoblado"
+                 name="centroPoblado">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">groups</span>
+          <input type="text" placeholder="Comunidad"
+                 [(ngModel)]="adultoMayor.ubicacionActual.comunidad"
+                 name="comunidad">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">home</span>
+          <input type="text" placeholder="Dirección"
+                 [(ngModel)]="adultoMayor.ubicacionActual.direccion"
+                 name="direccion">
+        </div>
+      </div>
+    </section>
+
+    <!-- RESPONSABLE FAMILIAR -->
+    <section class="bloque">
+      <div class="titulo-flex">
+        <div class="titulo-bloque sin-margin">
+          <span class="material-icons">supervisor_account</span>
+          <div>
+            <h2>Responsable familiar</h2>
+            <p>Opcional, completar solo si cuenta con familiar o tutor responsable.</p>
+          </div>
+        </div>
+
+        <label class="switch">
+          <input type="checkbox" [(ngModel)]="tieneResponsable" name="tieneResponsable">
+          <span></span>
+          Tiene responsable
+        </label>
+      </div>
+
+      @if (tieneResponsable) {
+        <div class="subtitulo">
+          <span class="material-icons">contact_emergency</span>
+          Datos del responsable
+        </div>
+
+        <div class="grid">
+          <div class="campo">
+            <span class="material-icons">credit_card</span>
+            <input type="text" placeholder="DNI del responsable" maxlength="8"
+                   [(ngModel)]="responsableFamiliar.dni"
+                   name="dniResponsable">
+          </div>
+
+          <div class="campo">
+            <span class="material-icons">person</span>
+            <input type="text" placeholder="Nombres"
+                   [(ngModel)]="responsableFamiliar.nombres"
+                   name="nombresResponsable">
+          </div>
+
+          <div class="campo">
+            <span class="material-icons">person_outline</span>
+            <input type="text" placeholder="Apellido paterno"
+                   [(ngModel)]="responsableFamiliar.apellidoPaterno"
+                   name="apellidoPaternoResponsable">
+          </div>
+
+          <div class="campo">
+            <span class="material-icons">person_outline</span>
+            <input type="text" placeholder="Apellido materno"
+                   [(ngModel)]="responsableFamiliar.apellidoMaterno"
+                   name="apellidoMaternoResponsable">
+          </div>
+
+          <div class="campo">
+            <span class="material-icons">phone</span>
+            <input type="text" placeholder="Celular"
+                   [(ngModel)]="responsableFamiliar.celular"
+                   name="celularResponsable">
+          </div>
+
+          <div class="campo">
+            <span class="material-icons">mail</span>
+            <input type="email" placeholder="Correo"
+                   [(ngModel)]="responsableFamiliar.correo"
+                   name="correoResponsable">
+          </div>
+
+          <div class="campo">
+            <span class="material-icons">family_restroom</span>
+            <input type="text" placeholder="Parentesco"
+                   [(ngModel)]="responsableFamiliar.parentesco"
+                   name="parentesco">
+          </div>
+
+          <label class="check-card">
+            <input type="checkbox"
+                   [(ngModel)]="responsableFamiliar.viveConAdultoMayor"
+                   name="viveConAdultoMayor">
+            <span class="material-icons">home</span>
+            Vive con el adulto mayor
+          </label>
+        </div>
+
+        <div class="subtitulo">
+          <span class="material-icons">location_on</span>
+          Ubicación del responsable
+        </div>
+
+        <div class="grid">
+          <div class="campo">
+            <span class="material-icons">map</span>
+            <input type="text" placeholder="Departamento"
+                   [(ngModel)]="responsableFamiliar.ubicacionActual.departamento"
+                   name="departamentoResponsable">
+          </div>
+
+          <div class="campo">
+            <span class="material-icons">location_city</span>
+            <input type="text" placeholder="Provincia"
+                   [(ngModel)]="responsableFamiliar.ubicacionActual.provincia"
+                   name="provinciaResponsable">
+          </div>
+
+          <div class="campo">
+            <span class="material-icons">pin_drop</span>
+            <input type="text" placeholder="Distrito"
+                   [(ngModel)]="responsableFamiliar.ubicacionActual.distrito"
+                   name="distritoResponsable">
+          </div>
+
+          <div class="campo">
+            <span class="material-icons">villa</span>
+            <input type="text" placeholder="Centro poblado"
+                   [(ngModel)]="responsableFamiliar.ubicacionActual.centroPoblado"
+                   name="centroPobladoResponsable">
+          </div>
+
+          <div class="campo">
+            <span class="material-icons">groups</span>
+            <input type="text" placeholder="Comunidad"
+                   [(ngModel)]="responsableFamiliar.ubicacionActual.comunidad"
+                   name="comunidadResponsable">
+          </div>
+
+          <div class="campo">
+            <span class="material-icons">home</span>
+            <input type="text" placeholder="Dirección"
+                   [(ngModel)]="responsableFamiliar.ubicacionActual.direccion"
+                   name="direccionResponsable">
+          </div>
+        </div>
+      }
+    </section>
+
+    <!-- BOTONES -->
+    <div class="acciones">
+      <button type="button" class="btn-secundario" (click)="limpiarFormulario()">
+        <span class="material-icons">cleaning_services</span>
+        Limpiar
+      </button>
+
+      <button type="submit" class="btn-principal" [disabled]="cargando">
+        <span class="material-icons">save</span>
+        @if (cargando) {
+          Registrando...
+        } @else {
+          Registrar adulto mayor
+        }
+      </button>
+    </div>
+
+  </form>
+</div>

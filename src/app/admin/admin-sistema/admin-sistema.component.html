@@ -1,0 +1,101 @@
+<div class="sistema-container">
+
+  <div class="card">
+
+    <div class="header">
+      <h2>
+        <span class="material-icons">storage</span>
+        Gestión de datos
+      </h2>
+      <p>Administra copias de seguridad, restauración, exportación, migración y limpieza de datos.</p>
+    </div>
+
+    <div class="alerta aviso">
+      <span class="material-icons">admin_panel_settings</span>
+      Estas funciones son exclusivas del administrador del sistema.
+    </div>
+
+    <div class="grid-opciones">
+
+      <div class="opcion">
+        <span class="material-icons icono">backup</span>
+        <h3>Backup manual</h3>
+        <p>Genera una copia de seguridad inmediata de la base de datos.</p>
+        <button (click)="backupManual()" [disabled]="cargando">
+          Generar backup
+        </button>
+      </div>
+
+      <div class="opcion">
+        <span class="material-icons icono">restore</span>
+        <h3>Restaurar base de datos</h3>
+        <p>Restaura la base de datos desde un archivo backup existente.</p>
+
+        <input
+          type="text"
+          placeholder="Ej: backups/backup_siam.sql"
+          [(ngModel)]="rutaArchivo">
+
+        <button (click)="restaurarBaseDatos()" [disabled]="cargando">
+          Restaurar
+        </button>
+      </div>
+
+      <div class="opcion">
+        <span class="material-icons icono">schedule</span>
+        <h3>Backups automáticos</h3>
+        <p>Configura la frecuencia de generación automática de backups.</p>
+
+        <select [(ngModel)]="frecuencia">
+          <option value="DIARIO">Diario</option>
+          <option value="SEMANAL">Semanal</option>
+          <option value="MENSUAL">Mensual</option>
+        </select>
+
+        <button (click)="configurarBackupAutomatico()" [disabled]="cargando">
+          Configurar
+        </button>
+      </div>
+
+      <div class="opcion">
+        <span class="material-icons icono">download</span>
+        <h3>Exportar base completa</h3>
+        <p>Exporta toda la información del sistema en un archivo backup.</p>
+        <button (click)="exportarBaseCompleta()" [disabled]="cargando">
+          Exportar
+        </button>
+      </div>
+
+      <div class="opcion">
+        <span class="material-icons icono">sync_alt</span>
+        <h3>Migración de datos</h3>
+        <p>Ejecuta procesos de migración o preparación de información.</p>
+        <button (click)="migrarDatos()" [disabled]="cargando">
+          Migrar
+        </button>
+      </div>
+
+      <div class="opcion">
+        <span class="material-icons icono">cleaning_services</span>
+        <h3>Limpieza de duplicados</h3>
+        <p>Elimina registros duplicados detectados en el sistema.</p>
+        <button class="btn-riesgo" (click)="limpiarDuplicados()" [disabled]="cargando">
+          Limpiar
+        </button>
+      </div>
+
+    </div>
+
+    <div class="mensaje" *ngIf="mensaje">
+      <span class="material-icons">check_circle</span>
+      {{ mensaje }}
+    </div>
+
+    <div class="error" *ngIf="error">
+      <span class="material-icons">error</span>
+      {{ error }}
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,538 @@
+<section class="visitas-medicas-container">
+
+  <!-- HEADER -->
+  <div class="top-header">
+
+    <div class="titulo">
+      <div class="icono">
+        <span class="material-icons">
+          home_health
+        </span>
+      </div>
+
+      <div>
+        <h1>Visitas médicas domiciliarias</h1>
+        <p>
+          Registro de visitas médicas, seguimiento clínico
+          y control integral del adulto mayor.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ALERTAS -->
+  @if (mensaje) {
+
+    <div class="alert success">
+
+      <span class="material-icons">
+        check_circle
+      </span>
+
+      {{ mensaje }}
+
+    </div>
+
+  }
+
+  @if (error) {
+
+    <div class="alert error">
+
+      <span class="material-icons">
+        error
+      </span>
+
+      {{ error }}
+
+    </div>
+
+  }
+
+  <!-- BUSCADOR -->
+  <div class="busqueda-card">
+
+    <div class="busqueda-input">
+
+      <span class="material-icons">
+        search
+      </span>
+
+      <input
+        type="text"
+        [(ngModel)]="filtro"
+        (input)="filtrar()"
+        placeholder="Buscar adulto mayor por DNI o nombre">
+
+    </div>
+
+    <button
+      class="btn-limpiar"
+      (click)="limpiar()">
+
+      <span class="material-icons">
+        cleaning_services
+      </span>
+
+      Limpiar
+
+    </button>
+
+  </div>
+
+  <!-- CONTENIDO -->
+  <div class="contenido-grid">
+
+    <!-- LISTA -->
+    <div class="panel-lista">
+
+      <div class="panel-header">
+
+        <h2>
+          Adultos mayores
+        </h2>
+
+        <span class="contador">
+          {{ visitasFiltradas.length }}
+        </span>
+
+      </div>
+
+      <!-- LOADING -->
+      @if (cargando) {
+
+        <div class="loading">
+
+          <div class="spinner"></div>
+
+          <p>Cargando adultos mayores...</p>
+
+        </div>
+
+      }
+
+      <!-- LISTA -->
+      @if (!cargando && visitasFiltradas.length > 0) {
+
+        <div class="lista-adultos">
+
+          @for (adulto of visitasFiltradas; track adulto.id) {
+
+            <div
+              class="adulto-card"
+              [class.active]="visitaSeleccionada?.id === adulto.id"
+              (click)="seleccionarAdulto(adulto)">
+
+              <!-- FOTO -->
+              <div class="foto">
+
+                @if (adulto?.datosPersonales?.foto) {
+
+                  <img
+                    [src]="adulto.datosPersonales.foto"
+                    alt="foto">
+
+                } @else {
+
+                  <span class="material-icons">
+                    person
+                  </span>
+
+                }
+
+              </div>
+
+              <!-- INFO -->
+              <div class="info">
+
+                <h3>
+                  {{ obtenerNombreCompleto(adulto) }}
+                </h3>
+
+                <p>
+                  DNI:
+                  {{ adulto?.datosPersonales?.dni }}
+                </p>
+
+                <div class="extra">
+
+                  <span>
+                    {{ obtenerEdad(adulto?.datosPersonales?.fechaNacimiento) }} años
+                  </span>
+
+                  <span
+                    class="riesgo"
+                    [ngClass]="obtenerClaseRiesgo(adulto)">
+
+                    {{
+                      adulto?.evaluacionIntegral?.nivelRiesgo || 'BAJO'
+                    }}
+
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+      <!-- VACIO -->
+      @if (!cargando && visitasFiltradas.length === 0) {
+
+        <div class="empty">
+
+          <span class="material-icons">
+            elderly
+          </span>
+
+          <h3>No hay adultos mayores</h3>
+
+          <p>
+            No se encontraron registros.
+          </p>
+
+        </div>
+
+      }
+
+    </div>
+
+    <!-- FORM -->
+    <div class="panel-formulario">
+
+      @if (!visitaSeleccionada) {
+
+        <div class="empty-form">
+
+          <span class="material-icons">
+            touch_app
+          </span>
+
+          <h2>Seleccione un adulto mayor</h2>
+
+          <p>
+            Seleccione un registro para iniciar
+            la visita médica domiciliaria.
+          </p>
+
+        </div>
+
+      }
+
+      @if (visitaSeleccionada) {
+
+        <div class="formulario-container">
+
+          <!-- CABECERA -->
+          <div class="paciente-top">
+
+            <div class="paciente-foto">
+
+              @if (visitaSeleccionada?.datosPersonales?.foto) {
+
+                <img
+                  [src]="visitaSeleccionada.datosPersonales.foto">
+
+              } @else {
+
+                <span class="material-icons">
+                  person
+                </span>
+
+              }
+
+            </div>
+
+            <div class="paciente-info">
+
+              <h2>
+                {{ obtenerNombreCompleto(visitaSeleccionada) }}
+              </h2>
+
+              <p>
+                DNI:
+                {{ visitaSeleccionada?.datosPersonales?.dni }}
+              </p>
+
+              <div
+                class="badge-riesgo"
+                [ngClass]="obtenerClaseRiesgo(visitaSeleccionada)">
+
+                {{
+                  visitaSeleccionada?.evaluacionIntegral?.nivelRiesgo
+                }}
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- FORM -->
+          <div class="form-grid">
+
+            <!-- MÉDICO -->
+            <div class="form-group">
+
+              <label>Médico responsable</label>
+
+              <input
+                type="text"
+                [(ngModel)]="formulario.medicoResponsable">
+
+            </div>
+
+            <!-- ESTABLECIMIENTO -->
+            <div class="form-group">
+
+              <label>Establecimiento de salud</label>
+
+              <input
+                type="text"
+                [(ngModel)]="formulario.establecimientoSalud">
+
+            </div>
+
+            <!-- MOTIVO -->
+            <div class="form-group full">
+
+              <label>Motivo de visita</label>
+
+              <input
+                type="text"
+                [(ngModel)]="formulario.motivoVisita">
+
+            </div>
+
+            <!-- EVALUACIÓN -->
+            <div class="form-group full">
+
+              <label>Evaluación médica</label>
+
+              <textarea
+                rows="4"
+                [(ngModel)]="formulario.evaluacionMedica">
+              </textarea>
+
+            </div>
+
+            <!-- DIAGNÓSTICO -->
+            <div class="form-group full">
+
+              <label>Diagnóstico presuntivo</label>
+
+              <textarea
+                rows="3"
+                [(ngModel)]="formulario.diagnosticoPresuntivo">
+              </textarea>
+
+            </div>
+
+            <!-- TRATAMIENTO -->
+            <div class="form-group full">
+
+              <label>Tratamiento indicado</label>
+
+              <textarea
+                rows="3"
+                [(ngModel)]="formulario.tratamientoIndicado">
+              </textarea>
+
+            </div>
+
+            <!-- RECOMENDACIONES -->
+            <div class="form-group full">
+
+              <label>Recomendaciones</label>
+
+              <textarea
+                rows="3"
+                [(ngModel)]="formulario.recomendaciones">
+              </textarea>
+
+            </div>
+
+          </div>
+
+          <!-- SIGNOS -->
+          <div class="signos-card">
+
+            <h3>Signos vitales</h3>
+
+            <div class="signos-grid">
+
+              <div class="form-group">
+
+                <label>Presión arterial</label>
+
+                <input
+                  type="text"
+                  placeholder="120/80"
+                  [(ngModel)]="formulario.presionArterial">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>Peso (kg)</label>
+
+                <input
+                  type="number"
+                  [(ngModel)]="formulario.peso">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>Talla (m)</label>
+
+                <input
+                  type="number"
+                  [(ngModel)]="formulario.talla">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>Glucosa</label>
+
+                <input
+                  type="number"
+                  [(ngModel)]="formulario.glucosa">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>Temperatura</label>
+
+                <input
+                  type="number"
+                  [(ngModel)]="formulario.temperatura">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>Frecuencia cardíaca</label>
+
+                <input
+                  type="number"
+                  [(ngModel)]="formulario.frecuenciaCardiaca">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>Saturación oxígeno</label>
+
+                <input
+                  type="number"
+                  [(ngModel)]="formulario.saturacionOxigeno">
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- OPCIONES -->
+          <div class="checks-grid">
+
+            <div class="check-card">
+
+              <label class="check-label">
+
+                <input
+                  type="checkbox"
+                  [(ngModel)]="formulario.requiereSeguimiento">
+
+                Requiere seguimiento
+
+              </label>
+
+              @if (formulario.requiereSeguimiento) {
+
+                <input
+                  type="date"
+                  [(ngModel)]="formulario.fechaProximaVisita">
+
+              }
+
+            </div>
+
+            <div class="check-card">
+
+              <label class="check-label">
+
+                <input
+                  type="checkbox"
+                  [(ngModel)]="formulario.requiereReferencia">
+
+                Requiere referencia
+
+              </label>
+
+              @if (formulario.requiereReferencia) {
+
+                <input
+                  type="text"
+                  placeholder="Hospital o centro"
+                  [(ngModel)]="formulario.referenciaA">
+
+              }
+
+            </div>
+
+          </div>
+
+          <!-- OBS -->
+          <div class="form-group full">
+
+            <label>Observaciones</label>
+
+            <textarea
+              rows="4"
+              [(ngModel)]="formulario.observaciones">
+            </textarea>
+
+          </div>
+
+          <!-- BOTONES -->
+          <div class="acciones">
+
+            <button
+              class="btn-guardar"
+              (click)="registrarVisita()"
+              [disabled]="guardando">
+
+              <span class="material-icons">
+                save
+              </span>
+
+              {{
+                guardando
+                  ? 'Guardando...'
+                  : 'Registrar visita médica'
+              }}
+
+            </button>
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</section>

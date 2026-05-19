@@ -1,0 +1,243 @@
+<div class="evaluacion-page">
+
+  <header class="hero-evaluacion">
+    <div class="hero-icon">
+      <span class="material-icons">assignment</span>
+    </div>
+
+    <div>
+      <span class="tag">Módulo CIAM</span>
+      <h1>Evaluación Integral del Adulto Mayor</h1>
+      <p>Registra estado físico, mental, emocional y social para el seguimiento integral.</p>
+    </div>
+  </header>
+
+  <section class="kpi-grid">
+    <div class="kpi-card">
+      <span class="material-icons">groups</span>
+      <div>
+        <h3>{{ adultosMayores.length }}</h3>
+        <p>Registrados</p>
+      </div>
+    </div>
+
+    <div class="kpi-card success">
+      <span class="material-icons">check_circle</span>
+      <div>
+        <h3>{{ totalEvaluados() }}</h3>
+        <p>Evaluados</p>
+      </div>
+    </div>
+
+    <div class="kpi-card alert">
+      <span class="material-icons">pending_actions</span>
+      <div>
+        <h3>{{ totalPendientes() }}</h3>
+        <p>Pendientes</p>
+      </div>
+    </div>
+
+    <div class="kpi-card danger">
+      <span class="material-icons">warning</span>
+      <div>
+        <h3>{{ totalRiesgoAlto() }}</h3>
+        <p>Riesgo alto/crítico</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel-busqueda">
+    <div class="titulo-bloque">
+      <span class="material-icons">search</span>
+      <div>
+        <h2>Buscar adulto mayor</h2>
+        <p>Filtra por DNI o nombre para registrar la evaluación.</p>
+      </div>
+    </div>
+
+    <div class="buscador">
+      <div class="campo">
+        <span class="material-icons">credit_card</span>
+        <input type="text" placeholder="Buscar por DNI o nombre..." [(ngModel)]="busqueda" (input)="filtrar()">
+      </div>
+
+      <button class="btn-secundario" (click)="limpiar()">
+        <span class="material-icons">refresh</span>
+        Limpiar
+      </button>
+    </div>
+
+    @if (mensaje) {
+      <div class="alerta exito">
+        <span class="material-icons">check_circle</span>
+        {{ mensaje }}
+      </div>
+    }
+
+    @if (error) {
+      <div class="alerta error">
+        <span class="material-icons">error</span>
+        {{ error }}
+      </div>
+    }
+  </section>
+
+  <main class="layout-evaluacion">
+
+    <section class="lista-panel">
+      <div class="section-title">
+        <h2>Adultos mayores</h2>
+        <p>{{ adultosFiltrados.length }} registros encontrados</p>
+      </div>
+
+      <div class="cards-lista">
+        @for (adulto of adultosFiltrados; track adulto.id) {
+          <article class="adulto-card" (click)="seleccionarAdulto(adulto)">
+            <div class="card-top">
+              <div class="avatar">
+                @if (adulto?.datosPersonales?.foto) {
+                  <img [src]="adulto.datosPersonales.foto" alt="Foto">
+                } @else {
+                  <span class="material-icons">person</span>
+                }
+              </div>
+
+              <div>
+                <h3>{{ nombreCompleto(adulto) }}</h3>
+                <p>DNI: {{ adulto?.datosPersonales?.dni }}</p>
+              </div>
+            </div>
+
+            <div class="estado-linea">
+              <span [class]="claseRiesgo(adulto)">
+                {{ obtenerRiesgo(adulto) }}
+              </span>
+
+              <span [class]="claseEstadoEvaluacion(adulto)">
+                {{ estadoEvaluacion(adulto) }}
+              </span>
+            </div>
+
+            <div class="barra">
+              <div class="progreso" [style.width.%]="calcularProgreso(adulto)"></div>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+
+    <section class="form-panel">
+
+      @if (!adultoSeleccionado) {
+        <div class="empty-state">
+          <span class="material-icons">touch_app</span>
+          <h2>Seleccione un adulto mayor</h2>
+          <p>Al seleccionar un registro podrás completar su evaluación integral.</p>
+        </div>
+      }
+
+      @if (adultoSeleccionado) {
+        <div class="evaluacion-form">
+
+          <div class="perfil-evaluado">
+            <div class="avatar grande">
+              @if (adultoSeleccionado?.datosPersonales?.foto) {
+                <img [src]="adultoSeleccionado.datosPersonales.foto" alt="Foto">
+              } @else {
+                <span class="material-icons">person</span>
+              }
+            </div>
+
+            <div>
+              <span class="tag-verde">Evaluación activa</span>
+              <h2>{{ nombreCompleto(adultoSeleccionado) }}</h2>
+              <p>DNI: {{ adultoSeleccionado?.datosPersonales?.dni }}</p>
+            </div>
+          </div>
+
+          <div class="riesgo-box">
+            <div>
+              <small>Nivel de riesgo automático</small>
+              <h3>{{ obtenerRiesgo(adultoSeleccionado) }}</h3>
+            </div>
+
+            <span [class]="claseEstadoEvaluacion(adultoSeleccionado)">
+              {{ estadoEvaluacion(adultoSeleccionado) }}
+            </span>
+          </div>
+
+          <div class="form-grid">
+
+            <label class="campo-opcion">
+              <span class="material-icons">directions_walk</span>
+              <div>
+                <strong>Estado físico</strong>
+                <select [(ngModel)]="adultoSeleccionado.evaluacionIntegral.estadoFisico">
+                  <option value="">Seleccione estado físico</option>
+                  @for (item of estadosFisicos; track item) {
+                    <option [value]="item">{{ item }}</option>
+                  }
+                </select>
+              </div>
+            </label>
+
+            <label class="campo-opcion">
+              <span class="material-icons">psychology</span>
+              <div>
+                <strong>Estado mental</strong>
+                <select [(ngModel)]="adultoSeleccionado.evaluacionIntegral.estadoMental">
+                  <option value="">Seleccione estado mental</option>
+                  @for (item of estadosMentales; track item) {
+                    <option [value]="item">{{ item }}</option>
+                  }
+                </select>
+              </div>
+            </label>
+
+            <label class="campo-opcion">
+              <span class="material-icons">favorite</span>
+              <div>
+                <strong>Estado emocional</strong>
+                <select [(ngModel)]="adultoSeleccionado.evaluacionIntegral.estadoEmocional">
+                  <option value="">Seleccione estado emocional</option>
+                  @for (item of estadosEmocionales; track item) {
+                    <option [value]="item">{{ item }}</option>
+                  }
+                </select>
+              </div>
+            </label>
+
+            <label class="campo-opcion">
+              <span class="material-icons">groups</span>
+              <div>
+                <strong>Estado social</strong>
+                <select [(ngModel)]="adultoSeleccionado.evaluacionIntegral.estadoSocial">
+                  <option value="">Seleccione estado social</option>
+                  @for (item of estadosSociales; track item) {
+                    <option [value]="item">{{ item }}</option>
+                  }
+                </select>
+              </div>
+            </label>
+
+          </div>
+
+          <div class="acciones">
+            <button class="btn-guardar" (click)="guardarEvaluacion()" [disabled]="guardando">
+              <span class="material-icons">save</span>
+              @if (guardando) {
+                Guardando...
+              } @else {
+                Guardar evaluación integral
+              }
+            </button>
+          </div>
+
+        </div>
+      }
+
+    </section>
+
+  </main>
+
+</div>

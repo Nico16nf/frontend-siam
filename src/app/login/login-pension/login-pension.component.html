@@ -1,0 +1,114 @@
+<section class="login-pension">
+
+  <div class="login-wrapper">
+
+    <!-- IZQUIERDA -->
+    <div class="login-left">
+
+      <div class="brand">
+
+        <span class="material-icons">
+          account_balance_wallet
+        </span>
+
+        <h1>SIAM</h1>
+
+      </div>
+
+      <h2>Pensión 65</h2>
+
+      <p>
+        Accede al módulo de gestión económica y beneficiarios
+        de Pensión 65. Administra pagos, evaluaciones
+        socioeconómicas y seguimiento integral.
+      </p>
+
+      <div class="login-illustration">
+
+        <span class="material-icons">
+          volunteer_activism
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- DERECHA -->
+    <div class="login-right">
+
+      <h2>Iniciar Sesión</h2>
+
+      <p class="sub">
+        Acceso exclusivo para responsables de Pensión 65
+      </p>
+
+      <form
+        (ngSubmit)="iniciarSesion()"
+        #loginForm="ngForm">
+
+        <!-- USUARIO -->
+        <div class="input-group">
+
+          <span class="material-icons">
+            person
+          </span>
+
+          <input
+            type="text"
+            name="usuario"
+            [(ngModel)]="usuario"
+            placeholder="Usuario"
+            required>
+
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="input-group">
+
+          <span class="material-icons">
+            lock
+          </span>
+
+          <input
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            placeholder="Contraseña"
+            required>
+
+        </div>
+
+        <!-- ERROR -->
+        @if (mensajeError) {
+
+          <p class="error">
+            {{ mensajeError }}
+          </p>
+
+        }
+
+        <!-- BOTÓN -->
+        <button
+          class="btn-login"
+          type="submit"
+          [disabled]="cargando">
+
+          <span class="material-icons">
+            login
+          </span>
+
+          {{
+            cargando
+              ? 'Ingresando...'
+              : 'Ingresar a Pensión 65'
+          }}
+
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>

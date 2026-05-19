@@ -1,0 +1,487 @@
+<div class="busqueda-ciam">
+
+  <div class="encabezado">
+    <div class="encabezado-icono">
+      <span class="material-icons">groups</span>
+    </div>
+
+    <div class="encabezado-texto">
+      <span class="etiqueta-modulo">Módulo CIAM</span>
+      <h1>Gestión Integral del Adulto Mayor</h1>
+      <p>Consulta, edición, clasificación SISFOH, alertas de vencimiento y seguimiento social.</p>
+    </div>
+  </div>
+
+  <section class="resumen-grid">
+    <div class="resumen-card">
+      <span class="material-icons">folder_shared</span>
+      <div>
+        <h3>{{ adultosFiltrados.length }}</h3>
+        <p>Registrados</p>
+      </div>
+    </div>
+
+    <div class="resumen-card">
+      <span class="material-icons">fact_check</span>
+      <div>
+        <h3>SISFOH</h3>
+        <p>Clasificación social</p>
+      </div>
+    </div>
+
+    <div class="resumen-card alerta-card">
+      <span class="material-icons">notification_important</span>
+      <div>
+        <h3>Alertas</h3>
+        <p>Vencimientos y riesgos</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel-busqueda animar">
+    <div class="titulo-bloque">
+      <span class="material-icons">search</span>
+      <div>
+        <h2>Buscar adulto mayor</h2>
+        <p>Ingrese el DNI para filtrar el padrón CIAM.</p>
+      </div>
+    </div>
+
+    <div class="buscador">
+      <div class="campo">
+        <span class="material-icons">credit_card</span>
+        <input type="text" maxlength="8" placeholder="Buscar por DNI..." [(ngModel)]="dni" name="dni">
+      </div>
+
+      <button class="btn-buscar" (click)="buscarPorDni()">
+        <span class="material-icons">search</span>
+        Buscar
+      </button>
+
+      <button class="btn-limpiar" (click)="limpiar()">
+        <span class="material-icons">refresh</span>
+        Reiniciar
+      </button>
+    </div>
+
+    @if (mensaje) {
+      <div class="alerta exito">
+        <span class="material-icons">check_circle</span>
+        {{ mensaje }}
+      </div>
+    }
+
+    @if (error) {
+      <div class="alerta error">
+        <span class="material-icons">error</span>
+        {{ error }}
+      </div>
+    }
+  </section>
+
+  <section class="listado-section animar">
+    <div class="section-header">
+      <div class="titulo-bloque sin-margin">
+        <span class="material-icons">elderly</span>
+        <div>
+          <h2>Padrón CIAM</h2>
+          <p>Adultos mayores registrados con estado social y SISFOH.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cards-adultos">
+      @for (adulto of adultosFiltrados; track adulto.id) {
+        <article class="adulto-card">
+
+          <div class="adulto-top">
+            <div class="mini-foto grande">
+              @if (adulto?.datosPersonales?.foto) {
+                <img [src]="adulto.datosPersonales.foto" alt="Foto">
+              } @else {
+                <span class="material-icons">person</span>
+              }
+            </div>
+
+            <div class="adulto-info">
+              <h3>{{ obtenerNombreCompletoLista(adulto) }}</h3>
+              <p>DNI: {{ adulto?.datosPersonales?.dni }}</p>
+              <span>{{ obtenerEdad(adulto) }} años · {{ adulto?.datosPersonales?.sexo || 'Sin sexo' }}</span>
+            </div>
+          </div>
+
+          <div class="estado-grid">
+            <div class="estado-box">
+              <small>SISFOH</small>
+              <span class="badge" [class]="obtenerClaseSisfohAdulto(adulto)">
+                {{ adulto?.sisfoh?.clasificacionSocioeconomica || 'SIN CLASIFICAR' }}
+              </span>
+            </div>
+
+            <div class="estado-box">
+              <small>Riesgo</small>
+              <span class="badge" [class]="obtenerClaseRiesgoAdulto(adulto)">
+                {{ adulto?.evaluacionIntegral?.nivelRiesgo || 'NO EVALUADO' }}
+              </span>
+            </div>
+
+            <div class="estado-box">
+              <small>Vencimiento SISFOH</small>
+              <strong>{{ obtenerFechaVencimientoSisfoh(adulto) }}</strong>
+              <span [class]="obtenerClaseAlertaSisfoh(adulto)">
+                {{ obtenerTextoAlertaSisfoh(adulto) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="cumplimiento-container">
+            <div class="barra">
+              <div class="progreso" [style.width.%]="calcularCumplimientoVisual(adulto)"></div>
+            </div>
+
+            <span class="estado" [class]="obtenerClaseCumplimiento(adulto)">
+              {{ obtenerEstadoCumplimiento(adulto) }}
+            </span>
+          </div>
+
+          <div class="acciones-card">
+            <button class="accion-btn ver" (click)="verDetalle(adulto)">
+              <span class="material-icons">visibility</span>
+              Ver detalle
+            </button>
+
+            <button class="accion-btn editar" (click)="editarDatos(adulto)">
+              <span class="material-icons">edit</span>
+              Editar datos
+            </button>
+
+            <button class="accion-btn clasificar" (click)="abrirClasificacion(adulto)">
+              <span class="material-icons">fact_check</span>
+              Clasificar
+            </button>
+
+            <button class="accion-btn eliminar" (click)="desactivar(adulto)">
+              <span class="material-icons">delete</span>
+              Desactivar
+            </button>
+          </div>
+
+        </article>
+      }
+    </div>
+  </section>
+
+  @if (adultoMayor) {
+    <section class="detalle-section animar">
+      <div class="titulo-bloque">
+        <span class="material-icons">badge</span>
+        <div>
+          <h2>Detalle del adulto mayor</h2>
+          <p>Resumen integral del registro seleccionado.</p>
+        </div>
+      </div>
+
+      <div class="perfil-card">
+        <div class="foto-grande">
+          @if (adultoMayor?.datosPersonales?.foto) {
+            <img [src]="adultoMayor.datosPersonales.foto" alt="Foto">
+          } @else {
+            <span class="material-icons">person</span>
+          }
+        </div>
+
+        <div class="perfil-info">
+          <span class="perfil-label">Adulto mayor seleccionado</span>
+          <h2>{{ obtenerNombreCompleto() }}</h2>
+
+          <div class="datos-grid">
+            <div class="dato">
+              <span class="material-icons">credit_card</span>
+              <div>
+                <label>DNI</label>
+                <p>{{ adultoMayor?.datosPersonales?.dni }}</p>
+              </div>
+            </div>
+
+            <div class="dato">
+              <span class="material-icons">calendar_month</span>
+              <div>
+                <label>Edad</label>
+                <p>{{ obtenerEdad(adultoMayor) }} años</p>
+              </div>
+            </div>
+
+            <div class="dato">
+              <span class="material-icons">phone</span>
+              <div>
+                <label>Celular</label>
+                <p>{{ adultoMayor?.datosPersonales?.celular || '-' }}</p>
+              </div>
+            </div>
+
+            <div class="dato">
+              <span class="material-icons">home</span>
+              <div>
+                <label>Dirección</label>
+                <p>{{ adultoMayor?.ubicacionActual?.direccion || '-' }}</p>
+              </div>
+            </div>
+
+            <div class="dato">
+              <span class="material-icons">event</span>
+              <div>
+                <label>Vencimiento SISFOH</label>
+                <p>{{ obtenerFechaVencimientoSisfoh(adultoMayor) }}</p>
+              </div>
+            </div>
+
+            <div class="dato">
+              <span class="material-icons">notification_important</span>
+              <div>
+                <label>Estado SISFOH</label>
+                <p>
+                  <span [class]="obtenerClaseAlertaSisfoh(adultoMayor)">
+                    {{ obtenerTextoAlertaSisfoh(adultoMayor) }}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cards-evaluacion">
+        <div class="eval-card">
+          <span class="material-icons">fact_check</span>
+          <h3>Clasificación SISFOH</h3>
+          <p class="estado-card" [class]="obtenerClaseSisfoh()">
+            {{ adultoMayor?.sisfoh?.clasificacionSocioeconomica || 'SIN CLASIFICACIÓN' }}
+          </p>
+          <small>Puntaje SISFOH: {{ adultoMayor?.sisfoh?.puntajeSisfoh || 0 }}</small>
+        </div>
+
+        <div class="eval-card">
+          <span class="material-icons">monitor_heart</span>
+          <h3>Nivel de riesgo</h3>
+          <p class="estado-card" [class]="obtenerClaseRiesgo()">
+            {{ adultoMayor?.evaluacionIntegral?.nivelRiesgo || 'NO EVALUADO' }}
+          </p>
+          <small>Calculado según situación social y SISFOH.</small>
+        </div>
+
+        <div class="eval-card">
+          <span class="material-icons">payments</span>
+          <h3>Pensión 65</h3>
+          <p class="estado-card neutral">
+            @if (adultoMayor?.pension65?.posibleBeneficiario) {
+              Posible beneficiario
+            } @else {
+              No califica / pendiente
+            }
+          </p>
+          <small>Según clasificación socioeconómica.</small>
+        </div>
+      </div>
+    </section>
+  }
+
+  @if (modoEdicion && adultoEditando) {
+    <section class="edicion-section animar">
+      <div class="titulo-bloque">
+        <span class="material-icons">edit</span>
+        <div>
+          <h2>Editar datos del adulto mayor</h2>
+          <p>Actualice datos personales, foto, ubicación, SISFOH y observaciones sociales.</p>
+        </div>
+      </div>
+
+      <div class="foto-edicion">
+        <div class="foto-grande">
+          @if (adultoEditando?.datosPersonales?.foto) {
+            <img [src]="adultoEditando.datosPersonales.foto" alt="Foto adulto mayor">
+          } @else {
+            <span class="material-icons">person</span>
+          }
+        </div>
+
+        <label class="btn-foto-editar">
+          <span class="material-icons">photo_camera</span>
+          Cambiar foto
+          <input type="file" accept="image/*" (change)="seleccionarFotoEdicion($event)">
+        </label>
+      </div>
+
+      <h3 class="subtitulo-form"><span class="material-icons">person</span> Datos personales</h3>
+
+      <div class="form-grid">
+        <div class="campo">
+          <span class="material-icons">credit_card</span>
+          <input type="text" maxlength="8" placeholder="DNI" [(ngModel)]="adultoEditando.datosPersonales.dni">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">person</span>
+          <input type="text" placeholder="Nombres" [(ngModel)]="adultoEditando.datosPersonales.nombres">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">person_outline</span>
+          <input type="text" placeholder="Apellido paterno" [(ngModel)]="adultoEditando.datosPersonales.apellidoPaterno">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">person_outline</span>
+          <input type="text" placeholder="Apellido materno" [(ngModel)]="adultoEditando.datosPersonales.apellidoMaterno">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">wc</span>
+          <select [(ngModel)]="adultoEditando.datosPersonales.sexo">
+            <option value="">Sexo</option>
+            <option value="MASCULINO">Masculino</option>
+            <option value="FEMENINO">Femenino</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">calendar_month</span>
+          <input type="date" [(ngModel)]="adultoEditando.datosPersonales.fechaNacimiento">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">phone</span>
+          <input type="text" placeholder="Celular" [(ngModel)]="adultoEditando.datosPersonales.celular">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">mail</span>
+          <input type="email" placeholder="Correo" [(ngModel)]="adultoEditando.datosPersonales.correo">
+        </div>
+      </div>
+
+      <h3 class="subtitulo-form"><span class="material-icons">location_on</span> Ubicación actual</h3>
+
+      <div class="form-grid">
+        <div class="campo">
+          <span class="material-icons">map</span>
+          <input type="text" placeholder="Departamento" [(ngModel)]="adultoEditando.ubicacionActual.departamento">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">location_city</span>
+          <input type="text" placeholder="Provincia" [(ngModel)]="adultoEditando.ubicacionActual.provincia">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">pin_drop</span>
+          <input type="text" placeholder="Distrito" [(ngModel)]="adultoEditando.ubicacionActual.distrito">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">home</span>
+          <input type="text" placeholder="Dirección" [(ngModel)]="adultoEditando.ubicacionActual.direccion">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">event</span>
+          <input type="date" [(ngModel)]="adultoEditando.sisfoh.fechaVencimiento">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">home_work</span>
+          <input type="text" placeholder="Tipo de vivienda" [(ngModel)]="adultoEditando.informacionSocial.tipoVivienda">
+        </div>
+      </div>
+
+      <div class="textarea-group">
+        <label>Observaciones sociales</label>
+        <textarea rows="5" placeholder="Observaciones..." [(ngModel)]="adultoEditando.informacionSocial.observacionesSociales"></textarea>
+      </div>
+
+      <div class="acciones-panel">
+        <button class="btn-cancelar" (click)="cancelarEdicion()">
+          <span class="material-icons">close</span>
+          Cancelar
+        </button>
+
+        <button class="btn-guardar" (click)="guardarEdicion()" [disabled]="guardando">
+          <span class="material-icons">save</span>
+          @if (guardando) {
+            Guardando...
+          } @else {
+            Guardar cambios
+          }
+        </button>
+      </div>
+    </section>
+  }
+
+  @if (mostrarPanelClasificacion && adultoSeleccionado) {
+    <section class="clasificacion-section animar">
+      <div class="titulo-bloque">
+        <span class="material-icons">assignment</span>
+        <div>
+          <h2>Evaluación socioeconómica SISFOH</h2>
+          <p>Complete la evaluación para calcular clasificación, riesgo y posible Pensión 65.</p>
+        </div>
+      </div>
+
+      <div class="checks-grid">
+        <label class="check-card"><input type="checkbox" [(ngModel)]="adultoSeleccionado.sisfoh.tieneIngresos"><span class="material-icons">payments</span>Tiene ingresos</label>
+        <label class="check-card"><input type="checkbox" [(ngModel)]="adultoSeleccionado.sisfoh.viviendaPropia"><span class="material-icons">home</span>Vivienda propia</label>
+        <label class="check-card"><input type="checkbox" [(ngModel)]="adultoSeleccionado.sisfoh.tieneAgua"><span class="material-icons">water_drop</span>Tiene agua</label>
+        <label class="check-card"><input type="checkbox" [(ngModel)]="adultoSeleccionado.sisfoh.tieneLuz"><span class="material-icons">lightbulb</span>Tiene luz</label>
+        <label class="check-card"><input type="checkbox" [(ngModel)]="adultoSeleccionado.sisfoh.tieneDesague"><span class="material-icons">plumbing</span>Tiene desagüe</label>
+        <label class="check-card"><input type="checkbox" [(ngModel)]="adultoSeleccionado.sisfoh.recibeApoyoFamiliar"><span class="material-icons">family_restroom</span>Recibe apoyo familiar</label>
+        <label class="check-card"><input type="checkbox" [(ngModel)]="adultoSeleccionado.sisfoh.viveSolo"><span class="material-icons">person</span>Vive solo</label>
+        <label class="check-card"><input type="checkbox" [(ngModel)]="adultoSeleccionado.sisfoh.discapacidad"><span class="material-icons">accessible</span>Tiene discapacidad</label>
+        <label class="check-card"><input type="checkbox" [(ngModel)]="adultoSeleccionado.sisfoh.enfermedadCronica"><span class="material-icons">medical_services</span>Enfermedad crónica</label>
+        <label class="check-card"><input type="checkbox" [(ngModel)]="adultoSeleccionado.sisfoh.situacionAbandono"><span class="material-icons">warning</span>Situación de abandono</label>
+      </div>
+
+      <div class="form-grid">
+        <div class="campo">
+          <span class="material-icons">payments</span>
+          <input type="number" placeholder="Ingreso mensual" [(ngModel)]="adultoSeleccionado.sisfoh.ingresoMensual">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">groups</span>
+          <input type="number" placeholder="Cantidad de dependientes" [(ngModel)]="adultoSeleccionado.sisfoh.cantidadDependientes">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">event</span>
+          <input type="date" [(ngModel)]="adultoSeleccionado.sisfoh.fechaVencimiento">
+        </div>
+
+        <div class="campo">
+          <span class="material-icons">home_work</span>
+          <input type="text" placeholder="Tipo de vivienda" [(ngModel)]="adultoSeleccionado.informacionSocial.tipoVivienda">
+        </div>
+      </div>
+
+      <div class="textarea-group">
+        <label>Observaciones sociales</label>
+        <textarea rows="5" placeholder="Ingrese observaciones..." [(ngModel)]="adultoSeleccionado.informacionSocial.observacionesSociales"></textarea>
+      </div>
+
+      <div class="acciones-panel">
+        <button class="btn-cancelar" (click)="cerrarClasificacion()">
+          <span class="material-icons">close</span>
+          Cancelar
+        </button>
+
+        <button class="btn-guardar" (click)="guardarClasificacion()" [disabled]="guardando">
+          <span class="material-icons">save</span>
+          @if (guardando) {
+            Guardando...
+          } @else {
+            Guardar clasificación
+          }
+        </button>
+      </div>
+    </section>
+  }
+
+</div>

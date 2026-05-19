@@ -1,0 +1,513 @@
+<section class="historial-page">
+
+  <!-- HERO -->
+  <div class="hero">
+
+    <div class="hero-icon">
+      <span class="material-icons">
+        folder_shared
+      </span>
+    </div>
+
+    <div class="hero-info">
+
+      <span class="tag">
+        HISTORIAL MÉDICO
+      </span>
+
+      <h1>
+        Historial Clínico Integral
+      </h1>
+
+      <p>
+        Consulta diagnósticos, tratamientos, controles,
+        campañas médicas y seguimiento clínico
+        de los adultos mayores registrados.
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- FILTROS -->
+  <div class="panel-filtros">
+
+    <div class="titulo">
+
+      <div>
+
+        <h2>
+          Búsqueda y filtros
+        </h2>
+
+        <p>
+          Filtra por paciente, médico, fechas o tipo de atención
+        </p>
+
+      </div>
+
+      <div class="acciones-top">
+
+        <button
+          class="btn-exportar"
+          (click)="exportarExcel()">
+
+          <span class="material-icons">
+            download
+          </span>
+
+          Exportar
+
+        </button>
+
+        <button
+          class="btn-imprimir"
+          (click)="imprimir()">
+
+          <span class="material-icons">
+            print
+          </span>
+
+          Imprimir
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="grid-filtros">
+
+      <!-- BUSQUEDA -->
+      <div class="campo">
+
+        <span class="material-icons">
+          search
+        </span>
+
+        <input
+          type="text"
+          [(ngModel)]="busqueda"
+          (input)="filtrar()"
+          placeholder="Buscar por DNI o nombre">
+
+      </div>
+
+      <!-- MEDICO -->
+      <div class="campo">
+
+        <span class="material-icons">
+          medical_services
+        </span>
+
+        <input
+          type="text"
+          [(ngModel)]="medico"
+          (input)="filtrar()"
+          placeholder="Buscar médico">
+
+      </div>
+
+      <!-- TIPO -->
+      <div class="campo">
+
+        <span class="material-icons">
+          local_hospital
+        </span>
+
+        <select
+          [(ngModel)]="tipoAtencion"
+          (change)="filtrar()">
+
+          <option value="TODOS">Todos</option>
+          <option value="CONSULTA">Consulta</option>
+          <option value="CONTROL">Control</option>
+          <option value="EMERGENCIA">Emergencia</option>
+          <option value="CAMPAÑA">Campaña</option>
+          <option value="VISITA_DOMICILIARIA">
+            Visita Domiciliaria
+          </option>
+
+        </select>
+
+      </div>
+
+      <!-- FECHA INICIO -->
+      <div class="campo">
+
+        <span class="material-icons">
+          event
+        </span>
+
+        <input
+          type="date"
+          [(ngModel)]="fechaInicio"
+          (change)="filtrar()">
+
+      </div>
+
+      <!-- FECHA FIN -->
+      <div class="campo">
+
+        <span class="material-icons">
+          calendar_month
+        </span>
+
+        <input
+          type="date"
+          [(ngModel)]="fechaFin"
+          (change)="filtrar()">
+
+      </div>
+
+      <!-- LIMPIAR -->
+      <button
+        class="btn-limpiar"
+        (click)="limpiarFiltros()">
+
+        <span class="material-icons">
+          cleaning_services
+        </span>
+
+        Limpiar
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- ALERTAS -->
+  @if (mensaje) {
+
+    <div class="alerta ok">
+
+      <span class="material-icons">
+        check_circle
+      </span>
+
+      {{ mensaje }}
+
+    </div>
+
+  }
+
+  @if (error) {
+
+    <div class="alerta error">
+
+      <span class="material-icons">
+        error
+      </span>
+
+      {{ error }}
+
+    </div>
+
+  }
+
+  <!-- LOADING -->
+  @if (cargando) {
+
+    <div class="loading">
+
+      <div class="spinner"></div>
+
+      <p>
+        Cargando historial clínico...
+      </p>
+
+    </div>
+
+  }
+
+  <!-- CONTENIDO -->
+  @if (!cargando) {
+
+    <div class="layout">
+
+      <!-- LISTA -->
+      <div class="lista">
+
+        @for (atencion of atencionesFiltradas; track atencion.id) {
+
+          <div
+            class="card"
+            [class.active]="atencionSeleccionada?.id === atencion.id"
+            (click)="seleccionarAtencion(atencion)">
+
+            <div class="card-header">
+
+              <div class="avatar">
+
+                @if (atencion.adultoMayor?.datosPersonales?.foto) {
+
+                  <img
+                    [src]="atencion.adultoMayor.datosPersonales.foto">
+
+                } @else {
+
+                  <span class="material-icons">
+                    person
+                  </span>
+
+                }
+
+              </div>
+
+              <div class="datos">
+
+                <h3>
+                  {{ nombreCompleto(atencion) }}
+                </h3>
+
+                <p>
+                  DNI:
+                  {{ dniPaciente(atencion) }}
+                </p>
+
+              </div>
+
+            </div>
+
+            <div class="chips">
+
+              <span
+                class="tipo"
+                [ngClass]="claseTipo(atencion.tipoAtencion)">
+
+                {{ atencion.tipoAtencion }}
+
+              </span>
+
+              <span
+                class="seguimiento"
+                [ngClass]="claseSeguimiento(atencion)">
+
+                {{
+                  atencion.requiereSeguimiento
+                    ? 'Seguimiento'
+                    : 'Sin seguimiento'
+                }}
+
+              </span>
+
+            </div>
+
+            <div class="info">
+
+              <p>
+
+                <strong>
+                  Médico:
+                </strong>
+
+                {{ atencion.medicoResponsable }}
+
+              </p>
+
+              <p>
+
+                <strong>
+                  Fecha:
+                </strong>
+
+                {{ atencion.fechaAtencion }}
+
+              </p>
+
+              <p>
+
+                <strong>
+                  Diagnóstico:
+                </strong>
+
+                {{ atencion.diagnostico }}
+
+              </p>
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+      <!-- DETALLE -->
+      <div class="detalle">
+
+        @if (atencionSeleccionada) {
+
+          <div class="detalle-card">
+
+            <div class="detalle-top">
+
+              <div class="avatar grande">
+
+                @if (atencionSeleccionada.adultoMayor?.datosPersonales?.foto) {
+
+                  <img
+                    [src]="atencionSeleccionada.adultoMayor.datosPersonales.foto">
+
+                } @else {
+
+                  <span class="material-icons">
+                    person
+                  </span>
+
+                }
+
+              </div>
+
+              <div>
+
+                <h2>
+                  {{ nombreCompleto(atencionSeleccionada) }}
+                </h2>
+
+                <p>
+                  DNI:
+                  {{ dniPaciente(atencionSeleccionada) }}
+                </p>
+
+                <p>
+                  Edad:
+                  {{ obtenerEdad(atencionSeleccionada) }} años
+                </p>
+
+              </div>
+
+            </div>
+
+            <div class="bloque">
+
+              <h3>
+                Atención Médica
+              </h3>
+
+              <div class="grid">
+
+                <div>
+                  <label>Médico</label>
+                  <p>{{ atencionSeleccionada.medicoResponsable }}</p>
+                </div>
+
+                <div>
+                  <label>Fecha</label>
+                  <p>{{ atencionSeleccionada.fechaAtencion }}</p>
+                </div>
+
+                <div>
+                  <label>Establecimiento</label>
+                  <p>{{ atencionSeleccionada.establecimientoSalud }}</p>
+                </div>
+
+                <div>
+                  <label>Tipo</label>
+                  <p>{{ atencionSeleccionada.tipoAtencion }}</p>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="bloque">
+
+              <h3>
+                Diagnóstico y tratamiento
+              </h3>
+
+              <div class="texto">
+
+                <label>Diagnóstico</label>
+
+                <p>
+                  {{ atencionSeleccionada.diagnostico }}
+                </p>
+
+              </div>
+
+              <div class="texto">
+
+                <label>Tratamiento</label>
+
+                <p>
+                  {{ atencionSeleccionada.tratamiento }}
+                </p>
+
+              </div>
+
+              <div class="texto">
+
+                <label>Recomendaciones</label>
+
+                <p>
+                  {{ atencionSeleccionada.recomendaciones }}
+                </p>
+
+              </div>
+
+            </div>
+
+            <div class="bloque">
+
+              <h3>
+                Signos Vitales
+              </h3>
+
+              <div class="grid">
+
+                <div>
+                  <label>Presión</label>
+                  <p>{{ atencionSeleccionada.presionArterial }}</p>
+                </div>
+
+                <div>
+                  <label>Peso</label>
+                  <p>{{ atencionSeleccionada.peso }} kg</p>
+                </div>
+
+                <div>
+                  <label>Talla</label>
+                  <p>{{ atencionSeleccionada.talla }} m</p>
+                </div>
+
+                <div>
+                  <label>Glucosa</label>
+                  <p>{{ atencionSeleccionada.glucosa }}</p>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        } @else {
+
+          <div class="empty">
+
+            <span class="material-icons">
+              folder_open
+            </span>
+
+            <h3>
+              Selecciona una atención médica
+            </h3>
+
+            <p>
+              Aquí podrás visualizar el historial clínico completo
+            </p>
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+  }
+
+</section>

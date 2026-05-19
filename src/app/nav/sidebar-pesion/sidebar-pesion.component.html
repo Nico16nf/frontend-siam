@@ -1,0 +1,215 @@
+<aside
+  class="sidebar-pension"
+  [class.colapsado]="sidebarColapsado">
+
+  <!-- HEADER -->
+  <div class="top-sidebar">
+
+    <div class="logo">
+
+      <div class="logo-icon">
+        <span class="material-icons">
+          volunteer_activism
+        </span>
+      </div>
+
+      @if (!sidebarColapsado) {
+
+        <div class="logo-text">
+          <h2>SIAM</h2>
+          <p>Pensión 65</p>
+        </div>
+
+      }
+
+    </div>
+
+    <button
+      class="toggle-btn"
+      (click)="toggleSidebar()">
+
+      <span class="material-icons">
+        {{
+          sidebarColapsado
+            ? 'menu'
+            : 'menu_open'
+        }}
+      </span>
+
+    </button>
+
+  </div>
+
+  <!-- PERFIL -->
+  <div
+    class="perfil"
+    (click)="irPerfil()">
+
+    <div class="avatar">
+
+      <span class="material-icons">
+        account_balance_wallet
+      </span>
+
+    </div>
+
+    @if (!sidebarColapsado) {
+
+      <div class="perfil-info">
+
+        <h4>
+          {{
+            usuario?.nombres || 'Responsable'
+          }}
+        </h4>
+
+        <p>
+          {{
+            usuario?.rol || 'PENSIÓN 65'
+          }}
+        </p>
+
+      </div>
+
+    }
+
+  </div>
+
+  <!-- MENU -->
+  <nav class="menu">
+
+    <!-- DASHBOARD -->
+    <a
+      routerLink="/pension"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="item">
+
+      <span class="material-icons">
+        dashboard
+      </span>
+
+      @if (!sidebarColapsado) {
+        <span>Dashboard</span>
+      }
+
+    </a>
+
+    <!-- BENEFICIARIOS -->
+    <a
+      routerLink="/pension/beneficiarios"
+      routerLinkActive="active"
+      class="item">
+
+      <span class="material-icons">
+        groups
+      </span>
+
+      @if (!sidebarColapsado) {
+        <span>Beneficiarios</span>
+      }
+
+    </a>
+
+    <!-- EVALUACION -->
+    <a
+      routerLink="/pension/evaluacion-economica"
+      routerLinkActive="active"
+      class="item">
+
+      <span class="material-icons">
+        analytics
+      </span>
+
+      @if (!sidebarColapsado) {
+        <span>Evaluación Económica</span>
+      }
+
+    </a>
+
+    <!-- PAGOS -->
+    <a
+      routerLink="/pension/pagos"
+      routerLinkActive="active"
+      class="item">
+
+      <span class="material-icons">
+        payments
+      </span>
+
+      @if (!sidebarColapsado) {
+        <span>Pagos</span>
+      }
+
+    </a>
+
+    <!-- SALUD -->
+    <a
+      routerLink="/pension/salud"
+      routerLinkActive="active"
+      class="item">
+
+      <span class="material-icons">
+        local_hospital
+      </span>
+
+      @if (!sidebarColapsado) {
+        <span>Seguimiento Salud</span>
+      }
+
+    </a>
+
+    <!-- VISITAS -->
+    <a
+      routerLink="/pension/visitas"
+      routerLinkActive="active"
+      class="item">
+
+      <span class="material-icons">
+        home
+      </span>
+
+      @if (!sidebarColapsado) {
+        <span>Visitas Sociales</span>
+      }
+
+    </a>
+
+    <!-- REPORTES -->
+    <a
+      routerLink="/pension/reportes"
+      routerLinkActive="active"
+      class="item">
+
+      <span class="material-icons">
+        assessment
+      </span>
+
+      @if (!sidebarColapsado) {
+        <span>Reportes</span>
+      }
+
+    </a>
+
+  </nav>
+
+  <!-- FOOTER -->
+  <div class="sidebar-footer">
+
+    <button
+      class="logout-btn"
+      (click)="cerrarSesion()">
+
+      <span class="material-icons">
+        logout
+      </span>
+
+      @if (!sidebarColapsado) {
+        <span>Cerrar sesión</span>
+      }
+
+    </button>
+
+  </div>
+
+</aside>

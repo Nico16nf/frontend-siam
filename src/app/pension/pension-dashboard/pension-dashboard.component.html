@@ -1,0 +1,158 @@
+<section class="dashboard-container">
+
+  <div class="header">
+    <div>
+      <h1>Dashboard Pensión 65</h1>
+      <p>Resumen general de beneficiarios, pagos, evaluaciones y estados del programa.</p>
+    </div>
+
+    <button class="btn-recargar" (click)="cargarDashboard()">
+      <span class="material-icons">refresh</span>
+      Actualizar
+    </button>
+  </div>
+
+  @if (error) {
+    <div class="alert error">{{ error }}</div>
+  }
+
+  @if (cargando) {
+    <div class="loading">Cargando dashboard...</div>
+  } @else {
+
+    <div class="kpi-grid">
+
+      <div class="kpi-card">
+        <span class="material-icons">assignment</span>
+        <div>
+          <h3>{{ totalEvaluaciones }}</h3>
+          <p>Evaluaciones</p>
+        </div>
+      </div>
+
+      <div class="kpi-card verde">
+        <span class="material-icons">verified</span>
+        <div>
+          <h3>{{ totalBeneficiarios }}</h3>
+          <p>Beneficiarios</p>
+        </div>
+      </div>
+
+      <div class="kpi-card azul">
+        <span class="material-icons">person_search</span>
+        <div>
+          <h3>{{ totalPosibles }}</h3>
+          <p>Posibles beneficiarios</p>
+        </div>
+      </div>
+
+      <div class="kpi-card dorado">
+        <span class="material-icons">payments</span>
+        <div>
+          <h3>S/ {{ montoTotal }}</h3>
+          <p>Monto registrado</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="contenido-grid">
+
+      <div class="panel">
+        <h2>Estado del programa</h2>
+
+        <div class="progreso">
+          <div class="progreso-info">
+            <span>Beneficiarios activos</span>
+            <strong>{{ porcentajeBeneficiarios() }}%</strong>
+          </div>
+
+          <div class="barra">
+            <div [style.width.%]="porcentajeBeneficiarios()"></div>
+          </div>
+        </div>
+
+        <div class="estado-grid">
+          <div>
+            <h3>{{ totalPendientes }}</h3>
+            <p>Pendientes</p>
+          </div>
+
+          <div>
+            <h3>{{ totalSuspendidos }}</h3>
+            <p>Suspendidos</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Últimos pagos</h2>
+
+        @for (p of ultimosPagos; track p.id) {
+          <div class="list-item">
+            <div>
+              <strong>{{ nombreCompleto(p) }}</strong>
+              <p>{{ dni(p) }} · {{ p.fechaUltimoPago }}</p>
+            </div>
+
+            <span>S/ {{ p.montoUltimoPago || 0 }}</span>
+          </div>
+        } @empty {
+          <div class="vacio">No hay pagos registrados.</div>
+        }
+      </div>
+
+    </div>
+
+    <div class="panel tabla-panel">
+
+      <div class="tabla-header">
+        <div>
+          <h2>Evaluaciones recientes</h2>
+          <p>Últimos registros procesados por Pensión 65.</p>
+        </div>
+
+        <span class="contador">{{ recientes.length }} registros</span>
+      </div>
+
+      <div class="tabla-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>DNI</th>
+              <th>Adulto mayor</th>
+              <th>Distrito</th>
+              <th>Estado</th>
+              <th>Beneficiario</th>
+              <th>Último pago</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (p of recientes; track p.id) {
+              <tr>
+                <td>{{ dni(p) }}</td>
+                <td><strong>{{ nombreCompleto(p) }}</strong></td>
+                <td>{{ distrito(p) }}</td>
+                <td>
+                  <span [class]="claseEstado(p.estado)">
+                    {{ p.estado || 'SIN_EVALUAR' }}
+                  </span>
+                </td>
+                <td>{{ p.beneficiario ? 'Sí' : 'No' }}</td>
+                <td>S/ {{ p.montoUltimoPago || 0 }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="vacio">No hay evaluaciones registradas.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  }
+
+</section>

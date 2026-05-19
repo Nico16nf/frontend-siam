@@ -1,0 +1,235 @@
+<section class="salud-dashboard">
+
+  <header class="hero">
+    <div class="hero-icon">
+      <span class="material-icons">monitor_heart</span>
+    </div>
+
+    <div>
+      <span class="tag">Panel Salud</span>
+      <h1>Dashboard Médico</h1>
+      <p>Resumen general de derivaciones, atenciones, visitas médicas y campañas de salud.</p>
+    </div>
+
+    <button class="btn-refresh" (click)="cargarDashboard()">
+      <span class="material-icons">refresh</span>
+      Actualizar
+    </button>
+  </header>
+
+  @if (error) {
+    <div class="alert error">
+      <span class="material-icons">error</span>
+      {{ error }}
+    </div>
+  }
+
+  @if (cargando) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando dashboard de salud...</p>
+    </div>
+  }
+
+  @if (!cargando) {
+
+    <section class="kpi-grid">
+
+      <div class="kpi-card">
+        <span class="material-icons">groups</span>
+        <div>
+          <h3>{{ totalAdultos }}</h3>
+          <p>Adultos registrados</p>
+        </div>
+      </div>
+
+      <div class="kpi-card warning">
+        <span class="material-icons">pending_actions</span>
+        <div>
+          <h3>{{ derivacionesPendientes }}</h3>
+          <p>Derivaciones pendientes</p>
+        </div>
+      </div>
+
+      <div class="kpi-card success">
+        <span class="material-icons">medical_services</span>
+        <div>
+          <h3>{{ totalAtenciones }}</h3>
+          <p>Atenciones médicas</p>
+        </div>
+      </div>
+
+      <div class="kpi-card info">
+        <span class="material-icons">home_health</span>
+        <div>
+          <h3>{{ totalVisitas }}</h3>
+          <p>Visitas médicas</p>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="dashboard-grid">
+
+      <div class="panel">
+        <div class="panel-title">
+          <span class="material-icons">send</span>
+          <div>
+            <h2>Derivaciones CIAM</h2>
+            <p>Estado de pacientes derivados al módulo salud.</p>
+          </div>
+        </div>
+
+        <div class="progress-item">
+          <div>
+            <strong>Pendientes</strong>
+            <span>{{ derivacionesPendientes }} casos</span>
+          </div>
+          <div class="bar">
+            <div [style.width.%]="porcentaje(derivacionesPendientes, totalDerivaciones)"></div>
+          </div>
+          <b>{{ porcentaje(derivacionesPendientes, totalDerivaciones) }}%</b>
+        </div>
+
+        <div class="progress-item success">
+          <div>
+            <strong>Atendidas</strong>
+            <span>{{ derivacionesAtendidas }} casos</span>
+          </div>
+          <div class="bar">
+            <div [style.width.%]="porcentaje(derivacionesAtendidas, totalDerivaciones)"></div>
+          </div>
+          <b>{{ porcentaje(derivacionesAtendidas, totalDerivaciones) }}%</b>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span class="material-icons">warning</span>
+          <div>
+            <h2>Casos prioritarios</h2>
+            <p>Adultos mayores con riesgo alto o crítico.</p>
+          </div>
+        </div>
+
+        <div class="risk-grid">
+          <div class="risk-card alto">
+            <h3>{{ riesgoAlto }}</h3>
+            <p>Riesgo alto</p>
+          </div>
+
+          <div class="risk-card critico">
+            <h3>{{ riesgoCritico }}</h3>
+            <p>Riesgo crítico</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span class="material-icons">home_health</span>
+          <div>
+            <h2>Visitas médicas</h2>
+            <p>Seguimiento y referencias médicas.</p>
+          </div>
+        </div>
+
+        <div class="mini-grid">
+          <div>
+            <span class="material-icons">monitor_heart</span>
+            <h3>{{ visitasSeguimiento }}</h3>
+            <p>Requieren seguimiento</p>
+          </div>
+
+          <div>
+            <span class="material-icons">local_hospital</span>
+            <h3>{{ visitasReferencia }}</h3>
+            <p>Requieren referencia</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span class="material-icons">vaccines</span>
+          <div>
+            <h2>Campañas de salud</h2>
+            <p>Control de campañas programadas y realizadas.</p>
+          </div>
+        </div>
+
+        <div class="campana-stats">
+          <div>
+            <strong>{{ campanasProgramadas }}</strong>
+            <span>Programadas</span>
+          </div>
+
+          <div>
+            <strong>{{ campanasProceso }}</strong>
+            <span>En proceso</span>
+          </div>
+
+          <div>
+            <strong>{{ campanasFinalizadas }}</strong>
+            <span>Finalizadas</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="bottom-grid">
+
+      <div class="panel">
+        <div class="panel-title">
+          <span class="material-icons">history</span>
+          <div>
+            <h2>Últimas atenciones</h2>
+            <p>Registros médicos recientes.</p>
+          </div>
+        </div>
+
+        @if (ultimasAtenciones().length === 0) {
+          <div class="empty">No hay atenciones registradas.</div>
+        }
+
+        @for (a of ultimasAtenciones(); track a.id) {
+          <div class="list-item">
+            <div>
+              <h4>{{ nombrePaciente(a) }}</h4>
+              <p>{{ a.tipoAtencion || 'Atención médica' }} · {{ a.fechaAtencion || '-' }}</p>
+            </div>
+            <span>{{ a.medicoResponsable || 'Médico' }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span class="material-icons">event_available</span>
+          <div>
+            <h2>Próximas campañas</h2>
+            <p>Campañas programadas o en proceso.</p>
+          </div>
+        </div>
+
+        @if (proximasCampanas().length === 0) {
+          <div class="empty">No hay campañas próximas.</div>
+        }
+
+        @for (c of proximasCampanas(); track c.id) {
+          <div class="list-item">
+            <div>
+              <h4>{{ c.nombreCampana }}</h4>
+              <p>{{ c.lugar || '-' }} · {{ c.fechaInicio || '-' }}</p>
+            </div>
+            <span class="estado">{{ c.estado }}</span>
+          </div>
+        }
+      </div>
+
+    </section>
+
+  }
+
+</section>

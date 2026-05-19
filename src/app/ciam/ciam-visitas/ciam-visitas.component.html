@@ -1,0 +1,571 @@
+<div class="visitas-page">
+
+  <!-- HEADER -->
+
+  <header class="hero">
+
+    <div class="hero-icon">
+      <span class="material-icons">home</span>
+    </div>
+
+    <div>
+
+      <span class="tag">
+        Gestión CIAM
+      </span>
+
+      <h1>
+        Visitas Domiciliarias
+      </h1>
+
+      <p>
+        Registro y seguimiento de adultos mayores vulnerables,
+        abandono, violencia familiar y condiciones de vivienda.
+      </p>
+
+    </div>
+
+  </header>
+
+  <!-- BUSCADOR -->
+
+  <section class="panel">
+
+    <div class="panel-title">
+
+      <span class="material-icons">
+        manage_search
+      </span>
+
+      <div>
+
+        <h2>Buscar Adulto Mayor</h2>
+
+        <p>
+          Seleccione al adulto mayor para registrar una visita.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="buscador">
+
+      <div class="campo">
+
+        <span class="material-icons">search</span>
+
+        <input
+          type="text"
+          placeholder="Buscar por DNI o nombre..."
+          [(ngModel)]="busqueda"
+          (input)="filtrar()"
+        >
+
+      </div>
+
+      <button class="btn-secundario" (click)="limpiar()">
+
+        <span class="material-icons">refresh</span>
+
+        Limpiar
+
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- CONTENIDO -->
+
+  <main class="layout">
+
+    <!-- LISTADO -->
+
+    <section class="panel listado">
+
+      <div class="section-title">
+
+        <h2>Adultos Mayores</h2>
+
+        <p>
+          {{ adultosFiltrados.length }} registros encontrados
+        </p>
+
+      </div>
+
+      <div class="cards">
+
+        @for (adulto of adultosFiltrados; track adulto.id) {
+
+          <article
+            class="adulto-card"
+            (click)="seleccionarAdulto(adulto)"
+          >
+
+            <div class="card-top">
+
+              <div class="avatar">
+
+                @if (adulto?.datosPersonales?.foto) {
+
+                  <img
+                    [src]="adulto.datosPersonales.foto"
+                    alt="foto"
+                  >
+
+                } @else {
+
+                  <span class="material-icons">
+                    person
+                  </span>
+
+                }
+
+              </div>
+
+              <div>
+
+                <h3>
+                  {{ nombreCompleto(adulto) }}
+                </h3>
+
+                <p>
+                  DNI:
+                  {{ adulto?.datosPersonales?.dni }}
+                </p>
+
+              </div>
+
+            </div>
+
+            <div class="flags">
+
+              @if (adulto?.informacionSocial?.viveSolo) {
+
+                <span class="flag warning">
+                  Vive solo
+                </span>
+
+              }
+
+              @if (adulto?.informacionSocial?.situacionAbandono) {
+
+                <span class="flag danger">
+                  Abandono
+                </span>
+
+              }
+
+              @if (adulto?.informacionSocial?.victimaViolencia) {
+
+                <span class="flag danger">
+                  Violencia
+                </span>
+
+              }
+
+            </div>
+
+            <div class="riesgo">
+
+              <span
+                class="badge"
+                [ngClass]="obtenerClaseRiesgo(adulto)"
+              >
+
+                {{
+                  adulto?.evaluacionIntegral?.nivelRiesgo
+                  || 'SIN RIESGO'
+                }}
+
+              </span>
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    </section>
+
+    <!-- FORMULARIO -->
+
+    <section class="panel formulario">
+
+      @if (!adultoSeleccionado) {
+
+        <div class="empty">
+
+          <span class="material-icons">
+            touch_app
+          </span>
+
+          <h2>
+            Seleccione un adulto mayor
+          </h2>
+
+          <p>
+            Registre visitas domiciliarias y evidencias.
+          </p>
+
+        </div>
+
+      }
+
+      @if (adultoSeleccionado) {
+
+        <div class="form-container">
+
+          <!-- PERFIL -->
+
+          <div class="perfil">
+
+            <div class="avatar grande">
+
+              @if (adultoSeleccionado?.datosPersonales?.foto) {
+
+                <img
+                  [src]="adultoSeleccionado.datosPersonales.foto"
+                >
+
+              } @else {
+
+                <span class="material-icons">
+                  person
+                </span>
+
+              }
+
+            </div>
+
+            <div>
+
+              <span class="tag-green">
+                Caso seleccionado
+              </span>
+
+              <h2>
+                {{ nombreCompleto(adultoSeleccionado) }}
+              </h2>
+
+              <p>
+                DNI:
+                {{ adultoSeleccionado?.datosPersonales?.dni }}
+              </p>
+
+            </div>
+
+          </div>
+
+          <!-- ALERTAS -->
+
+          @if (
+            adultoSeleccionado?.informacionSocial?.situacionAbandono
+          ) {
+
+            <div class="alert danger">
+
+              <span class="material-icons">
+                warning
+              </span>
+
+              Caso en situación de abandono
+
+            </div>
+
+          }
+
+          @if (
+            adultoSeleccionado?.informacionSocial?.victimaViolencia
+          ) {
+
+            <div class="alert danger">
+
+              <span class="material-icons">
+                report
+              </span>
+
+              Posible violencia familiar detectada
+
+            </div>
+
+          }
+
+          <!-- CAMPOS -->
+
+          <div class="grid">
+
+            <div class="campo-form">
+
+              <label>Responsable visita</label>
+
+              <input
+                type="text"
+                [(ngModel)]="visita.responsableVisita"
+              >
+
+            </div>
+
+            <div class="campo-form">
+
+              <label>Cargo</label>
+
+              <input
+                type="text"
+                [(ngModel)]="visita.cargoResponsable"
+              >
+
+            </div>
+
+            <div class="campo-form">
+
+              <label>Motivo visita</label>
+
+              <select [(ngModel)]="visita.motivoVisita">
+
+                <option value="">
+                  Seleccione
+                </option>
+
+                <option>
+                  Abandono
+                </option>
+
+                <option>
+                  Violencia familiar
+                </option>
+
+                <option>
+                  Vive solo
+                </option>
+
+                <option>
+                  Seguimiento social
+                </option>
+
+                <option>
+                  Verificación vivienda
+                </option>
+
+              </select>
+
+            </div>
+
+            <div class="campo-form">
+
+              <label>Estado vivienda</label>
+
+              <select [(ngModel)]="visita.estadoVivienda">
+
+                <option value="">
+                  Seleccione
+                </option>
+
+                <option>Buena</option>
+                <option>Regular</option>
+                <option>Precaria</option>
+                <option>Inhabitable</option>
+
+              </select>
+
+            </div>
+
+            <div class="campo-form">
+
+              <label>Condición adulto mayor</label>
+
+              <select [(ngModel)]="visita.condicionAdultoMayor">
+
+                <option value="">
+                  Seleccione
+                </option>
+
+                <option>Estable</option>
+                <option>Vulnerable</option>
+                <option>Crítico</option>
+                <option>Urgente</option>
+
+              </select>
+
+            </div>
+
+            <div class="campo-form">
+
+              <label>Próxima visita</label>
+
+              <input
+                type="date"
+                [(ngModel)]="visita.fechaProximaVisita"
+              >
+
+            </div>
+
+          </div>
+
+          <!-- CHECKS -->
+
+          <div class="checks">
+
+            <label class="check-card">
+
+              <input
+                type="checkbox"
+                [(ngModel)]="visita.requiereSeguimiento"
+              >
+
+              <span class="material-icons">
+                monitor_heart
+              </span>
+
+              Requiere seguimiento
+
+            </label>
+
+            <label class="check-card">
+
+              <input
+                type="checkbox"
+                [(ngModel)]="visita.casoPrioritario"
+              >
+
+              <span class="material-icons">
+                priority_high
+              </span>
+
+              Caso prioritario
+
+            </label>
+
+          </div>
+
+          <!-- OBS -->
+
+          <div class="campo-textarea">
+
+            <label>Observaciones</label>
+
+            <textarea
+              rows="5"
+              [(ngModel)]="visita.observaciones"
+            ></textarea>
+
+          </div>
+
+          <div class="campo-textarea">
+
+            <label>Recomendaciones</label>
+
+            <textarea
+              rows="5"
+              [(ngModel)]="visita.recomendaciones"
+            ></textarea>
+
+          </div>
+
+          <!-- FOTO -->
+
+          <div class="foto-box">
+
+            <div class="foto-preview">
+
+              @if (previewFoto) {
+
+                <img [src]="previewFoto">
+
+              } @else {
+
+                <span class="material-icons">
+                  add_a_photo
+                </span>
+
+              }
+
+            </div>
+
+            <label class="btn-upload">
+
+              <span class="material-icons">
+                upload
+              </span>
+
+              Subir evidencia
+
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onFileSelected($event)"
+              >
+
+            </label>
+
+          </div>
+
+          <!-- BOTONES -->
+
+          <div class="acciones">
+
+            <button
+              class="btn-guardar"
+              (click)="guardarVisita()"
+            >
+
+              <span class="material-icons">
+                save
+              </span>
+
+              @if (guardando) {
+
+                Guardando...
+
+              } @else {
+
+                Registrar visita
+
+              }
+
+            </button>
+
+          </div>
+
+          <!-- MENSAJES -->
+
+          @if (mensaje) {
+
+            <div class="alert success">
+
+              <span class="material-icons">
+                check_circle
+              </span>
+
+              {{ mensaje }}
+
+            </div>
+
+          }
+
+          @if (error) {
+
+            <div class="alert error">
+
+              <span class="material-icons">
+                error
+              </span>
+
+              {{ error }}
+
+            </div>
+
+          }
+
+        </div>
+
+      }
+
+    </section>
+
+  </main>
+
+</div>

@@ -1,0 +1,770 @@
+<section class="campanas-container">
+
+  <!-- ===================================================== -->
+  <!-- HEADER -->
+  <!-- ===================================================== -->
+
+  <div class="top-header">
+
+    <div class="titulo">
+
+      <div class="icono">
+        <span class="material-icons">
+          vaccination
+        </span>
+      </div>
+
+      <div>
+
+        <h1>
+          Campañas de Salud
+        </h1>
+
+        <p>
+          Gestión integral de campañas médicas,
+          jornadas preventivas y actividades de salud
+          para adultos mayores.
+        </p>
+
+      </div>
+
+    </div>
+
+    <button
+      class="btn-nueva"
+      (click)="nueva()">
+
+      <span class="material-icons">
+        add_circle
+      </span>
+
+      Nueva Campaña
+
+    </button>
+
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- ALERTAS -->
+  <!-- ===================================================== -->
+
+  @if (mensaje) {
+
+    <div class="alert success">
+
+      <span class="material-icons">
+        check_circle
+      </span>
+
+      {{ mensaje }}
+
+    </div>
+
+  }
+
+  @if (error) {
+
+    <div class="alert error">
+
+      <span class="material-icons">
+        error
+      </span>
+
+      {{ error }}
+
+    </div>
+
+  }
+
+  <!-- ===================================================== -->
+  <!-- FILTROS -->
+  <!-- ===================================================== -->
+
+  <div class="filtros-card">
+
+    <div class="busqueda">
+
+      <span class="material-icons">
+        search
+      </span>
+
+      <input
+        type="text"
+        placeholder="Buscar campaña..."
+        [(ngModel)]="filtro"
+        (input)="filtrar()">
+
+    </div>
+
+    <!-- ESTADO -->
+    <select
+      [(ngModel)]="filtroEstado"
+      (change)="filtrar()">
+
+      <option value="">
+        Todos los estados
+      </option>
+
+      <option value="PROGRAMADA">
+        Programada
+      </option>
+
+      <option value="EN_PROCESO">
+        En proceso
+      </option>
+
+      <option value="FINALIZADA">
+        Finalizada
+      </option>
+
+      <option value="CANCELADA">
+        Cancelada
+      </option>
+
+    </select>
+
+    <!-- TIPO -->
+    <select
+      [(ngModel)]="filtroTipo"
+      (change)="filtrar()">
+
+      <option value="">
+        Todos los tipos
+      </option>
+
+      <option value="VACUNACION">
+        Vacunación
+      </option>
+
+      <option value="CONTROL_PRESION">
+        Control Presión
+      </option>
+
+      <option value="DIABETES">
+        Diabetes
+      </option>
+
+      <option value="SALUD_MENTAL">
+        Salud Mental
+      </option>
+
+      <option value="NUTRICION">
+        Nutrición
+      </option>
+
+      <option value="ODONTOLOGIA">
+        Odontología
+      </option>
+
+      <option value="OFTALMOLOGIA">
+        Oftalmología
+      </option>
+
+      <option value="CAMPAÑA_INTEGRAL">
+        Campaña Integral
+      </option>
+
+    </select>
+
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- LOADING -->
+  <!-- ===================================================== -->
+
+  @if (cargando) {
+
+    <div class="loading">
+
+      <div class="spinner"></div>
+
+      <p>
+        Cargando campañas...
+      </p>
+
+    </div>
+
+  }
+
+  <!-- ===================================================== -->
+  <!-- CONTENIDO -->
+  <!-- ===================================================== -->
+
+  @if (!cargando) {
+
+    <div class="contenido-grid">
+
+      <!-- ================================================= -->
+      <!-- LISTADO -->
+      <!-- ================================================= -->
+
+      <div class="panel-listado">
+
+        <div class="panel-title">
+
+          <h2>
+            Campañas Registradas
+          </h2>
+
+          <span class="contador">
+            {{ campanasFiltradas.length }}
+          </span>
+
+        </div>
+
+        @if (campanasFiltradas.length === 0) {
+
+          <div class="empty">
+
+            <span class="material-icons">
+              vaccination
+            </span>
+
+            <h3>
+              No hay campañas registradas
+            </h3>
+
+          </div>
+
+        }
+
+        <div class="lista-campanas">
+
+          @for (campana of campanasFiltradas; track campana.id) {
+
+            <div
+              class="campana-card"
+              [class.active]="campanaSeleccionada?.id === campana.id"
+              (click)="seleccionarCampana(campana)">
+
+              <!-- IMAGEN -->
+              <div class="imagen">
+
+                @if (campana.imagen) {
+
+                  <img
+                    [src]="campana.imagen"
+                    alt="Campaña">
+
+                } @else {
+
+                  <span class="material-icons">
+                    vaccination
+                  </span>
+
+                }
+
+              </div>
+
+              <!-- INFO -->
+              <div class="info">
+
+                <div class="top-info">
+
+                  <h3>
+                    {{ campana.nombreCampana }}
+                  </h3>
+
+                  <span
+                    class="estado"
+                    [ngClass]="obtenerClaseEstado(campana.estado)">
+
+                    {{ campana.estado }}
+
+                  </span>
+
+                </div>
+
+                <p class="tipo">
+                  {{ campana.tipoCampana }}
+                </p>
+
+                <p class="ubicacion">
+
+                  <span class="material-icons">
+                    location_on
+                  </span>
+
+                  {{ campana.lugar }}
+
+                </p>
+
+                <div class="fechas">
+
+                  <span>
+
+                    <strong>Inicio:</strong>
+                    {{ campana.fechaInicio }}
+
+                  </span>
+
+                  <span>
+
+                    <strong>Fin:</strong>
+                    {{ campana.fechaFin }}
+
+                  </span>
+
+                </div>
+
+                <!-- PROGRESO -->
+                <div class="progreso">
+
+                  <div class="progreso-top">
+
+                    <span>
+                      Atendidos
+                    </span>
+
+                    <span>
+                      {{ campana.totalAtendidos }}
+                      /
+                      {{ campana.metaAtenciones }}
+                    </span>
+
+                  </div>
+
+                  <div class="barra">
+
+                    <div
+                      class="relleno"
+                      [style.width.%]="obtenerProgreso(campana)">
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+      </div>
+
+      <!-- ================================================= -->
+      <!-- FORMULARIO -->
+      <!-- ================================================= -->
+
+      <div class="panel-formulario">
+
+        @if (!vistaFormulario) {
+
+          <div class="empty-form">
+
+            <span class="material-icons">
+              add_box
+            </span>
+
+            <h2>
+              Gestión de Campañas
+            </h2>
+
+            <p>
+              Seleccione una campaña o cree una nueva
+              campaña de salud.
+            </p>
+
+          </div>
+
+        }
+
+        @if (vistaFormulario) {
+
+          <div class="form-wrapper">
+
+            <div class="form-title">
+
+              <h2>
+
+                {{
+                  campanaSeleccionada
+                    ? 'Actualizar Campaña'
+                    : 'Nueva Campaña'
+                }}
+
+              </h2>
+
+              <p>
+                Complete toda la información de la campaña médica.
+              </p>
+
+            </div>
+
+            <!-- FORM -->
+            <div class="form-grid">
+
+              <!-- NOMBRE -->
+              <div class="form-group full">
+
+                <label>
+                  Nombre de Campaña
+                </label>
+
+                <input
+                  type="text"
+                  [(ngModel)]="formulario.nombreCampana">
+
+              </div>
+
+              <!-- TIPO -->
+              <div class="form-group">
+
+                <label>
+                  Tipo de Campaña
+                </label>
+
+                <select
+                  [(ngModel)]="formulario.tipoCampana">
+
+                  <option value="">
+                    Seleccione
+                  </option>
+
+                  <option value="VACUNACION">
+                    Vacunación
+                  </option>
+
+                  <option value="CONTROL_PRESION">
+                    Control Presión
+                  </option>
+
+                  <option value="DIABETES">
+                    Diabetes
+                  </option>
+
+                  <option value="SALUD_MENTAL">
+                    Salud Mental
+                  </option>
+
+                  <option value="NUTRICION">
+                    Nutrición
+                  </option>
+
+                  <option value="ODONTOLOGIA">
+                    Odontología
+                  </option>
+
+                  <option value="OFTALMOLOGIA">
+                    Oftalmología
+                  </option>
+
+                  <option value="CAMPAÑA_INTEGRAL">
+                    Campaña Integral
+                  </option>
+
+                </select>
+
+              </div>
+
+              <!-- ESTADO -->
+              <div class="form-group">
+
+                <label>
+                  Estado
+                </label>
+
+                <select
+                  [(ngModel)]="formulario.estado">
+
+                  <option value="PROGRAMADA">
+                    Programada
+                  </option>
+
+                  <option value="EN_PROCESO">
+                    En proceso
+                  </option>
+
+                  <option value="FINALIZADA">
+                    Finalizada
+                  </option>
+
+                  <option value="CANCELADA">
+                    Cancelada
+                  </option>
+
+                </select>
+
+              </div>
+
+              <!-- LUGAR -->
+              <div class="form-group">
+
+                <label>
+                  Lugar
+                </label>
+
+                <input
+                  type="text"
+                  [(ngModel)]="formulario.lugar">
+
+              </div>
+
+              <!-- DISTRITO -->
+              <div class="form-group">
+
+                <label>
+                  Distrito
+                </label>
+
+                <input
+                  type="text"
+                  [(ngModel)]="formulario.distrito">
+
+              </div>
+
+              <!-- FECHAS -->
+              <div class="form-group">
+
+                <label>
+                  Fecha Inicio
+                </label>
+
+                <input
+                  type="date"
+                  [(ngModel)]="formulario.fechaInicio">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>
+                  Fecha Fin
+                </label>
+
+                <input
+                  type="date"
+                  [(ngModel)]="formulario.fechaFin">
+
+              </div>
+
+              <!-- RESPONSABLE -->
+              <div class="form-group">
+
+                <label>
+                  Responsable
+                </label>
+
+                <input
+                  type="text"
+                  [(ngModel)]="formulario.responsable">
+
+              </div>
+
+              <!-- ESTABLECIMIENTO -->
+              <div class="form-group">
+
+                <label>
+                  Establecimiento
+                </label>
+
+                <input
+                  type="text"
+                  [(ngModel)]="formulario.establecimientoSalud">
+
+              </div>
+
+              <!-- META -->
+              <div class="form-group">
+
+                <label>
+                  Meta de Atenciones
+                </label>
+
+                <input
+                  type="number"
+                  [(ngModel)]="formulario.metaAtenciones">
+
+              </div>
+
+              <!-- ATENDIDOS -->
+              <div class="form-group">
+
+                <label>
+                  Total Atendidos
+                </label>
+
+                <input
+                  type="number"
+                  [(ngModel)]="formulario.totalAtendidos">
+
+              </div>
+
+              <!-- OBJETIVO -->
+              <div class="form-group full">
+
+                <label>
+                  Objetivo
+                </label>
+
+                <textarea
+                  rows="3"
+                  [(ngModel)]="formulario.objetivo">
+
+                </textarea>
+
+              </div>
+
+              <!-- SERVICIOS -->
+              <div class="form-group full">
+
+                <label>
+                  Servicios
+                </label>
+
+                <textarea
+                  rows="3"
+                  [(ngModel)]="formulario.servicios">
+
+                </textarea>
+
+              </div>
+
+              <!-- DESCRIPCIÓN -->
+              <div class="form-group full">
+
+                <label>
+                  Descripción
+                </label>
+
+                <textarea
+                  rows="4"
+                  [(ngModel)]="formulario.descripcion">
+
+                </textarea>
+
+              </div>
+
+              <!-- OBS -->
+              <div class="form-group full">
+
+                <label>
+                  Observaciones
+                </label>
+
+                <textarea
+                  rows="4"
+                  [(ngModel)]="formulario.observaciones">
+
+                </textarea>
+
+              </div>
+
+              <!-- IMAGEN -->
+              <div class="form-group full">
+
+                <label>
+                  Imagen / Afiche
+                </label>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  (change)="onFileSelected($event)">
+
+              </div>
+
+              @if (formulario.imagen) {
+
+                <div class="preview full">
+
+                  <img
+                    [src]="formulario.imagen"
+                    alt="preview">
+
+                </div>
+
+              }
+
+            </div>
+
+            <!-- BOTONES -->
+            <div class="acciones">
+
+              @if (!campanaSeleccionada) {
+
+                <button
+                  class="btn-guardar"
+                  (click)="registrarCampana()"
+                  [disabled]="guardando">
+
+                  <span class="material-icons">
+                    save
+                  </span>
+
+                  {{
+                    guardando
+                      ? 'Guardando...'
+                      : 'Registrar Campaña'
+                  }}
+
+                </button>
+
+              }
+
+              @if (campanaSeleccionada) {
+
+                <button
+                  class="btn-actualizar"
+                  (click)="actualizarCampana()"
+                  [disabled]="guardando">
+
+                  <span class="material-icons">
+                    edit
+                  </span>
+
+                  {{
+                    guardando
+                      ? 'Actualizando...'
+                      : 'Actualizar Campaña'
+                  }}
+
+                </button>
+
+              }
+
+              <button
+                class="btn-cancelar"
+                (click)="cancelar()">
+
+                <span class="material-icons">
+                  close
+                </span>
+
+                Cancelar
+
+              </button>
+
+              @if (campanaSeleccionada) {
+
+                <button
+                  class="btn-eliminar"
+                  (click)="eliminarCampana(campanaSeleccionada)">
+
+                  <span class="material-icons">
+                    delete
+                  </span>
+
+                  Eliminar
+
+                </button>
+
+              }
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+  }
+
+</section>

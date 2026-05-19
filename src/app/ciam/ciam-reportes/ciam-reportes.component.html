@@ -1,0 +1,389 @@
+<div class="reportes-page">
+
+  <!-- HERO -->
+  <section class="hero-reportes">
+
+    <div class="hero-icon">
+      <span class="material-icons">description</span>
+    </div>
+
+    <div class="hero-info">
+      <span class="tag">Módulo CIAM</span>
+
+      <h1>Reportes Integrales</h1>
+
+      <p>
+        Consulte, filtre y exporte información de adultos mayores,
+        SISFOH, riesgo social, salud, visitas domiciliarias y derivaciones.
+      </p>
+    </div>
+
+  </section>
+
+  <!-- FILTROS -->
+  <section class="panel-reportes">
+
+    <div class="panel-title">
+
+      <div class="title-icon">
+        <span class="material-icons">analytics</span>
+      </div>
+
+      <div>
+        <h2>Filtros de Reporte</h2>
+        <p>
+          Filtre información por riesgo, SISFOH, fechas y búsqueda personalizada.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="filtros-grid">
+
+      <div class="campo-form">
+        <label>Tipo de reporte</label>
+
+        <select [(ngModel)]="tipoReporte">
+          <option value="GENERAL">General</option>
+          <option value="RIESGO">Riesgo social</option>
+          <option value="SISFOH">SISFOH</option>
+          <option value="SALUD">Salud</option>
+          <option value="VISITAS">Visitas</option>
+        </select>
+      </div>
+
+      <div class="campo-form">
+        <label>Buscar</label>
+
+        <input
+          type="text"
+          placeholder="Buscar por DNI o nombres"
+          [(ngModel)]="busqueda"
+          (input)="aplicarFiltros()">
+      </div>
+
+      <div class="campo-form">
+        <label>Riesgo</label>
+
+        <select [(ngModel)]="riesgo" (change)="aplicarFiltros()">
+          <option value="TODOS">Todos</option>
+          <option value="BAJO">Bajo</option>
+          <option value="MEDIO">Medio</option>
+          <option value="ALTO">Alto</option>
+          <option value="CRITICO">Crítico</option>
+        </select>
+      </div>
+
+      <div class="campo-form">
+        <label>SISFOH</label>
+
+        <select [(ngModel)]="sisfoh" (change)="aplicarFiltros()">
+          <option value="TODOS">Todos</option>
+          <option value="POBRE_EXTREMO">Pobre extremo</option>
+          <option value="POBRE">Pobre</option>
+          <option value="NO_POBRE">No pobre</option>
+        </select>
+      </div>
+
+      <div class="campo-form">
+        <label>Fecha inicio</label>
+
+        <input
+          type="date"
+          [(ngModel)]="fechaInicio"
+          (change)="aplicarFiltros()">
+      </div>
+
+      <div class="campo-form">
+        <label>Fecha fin</label>
+
+        <input
+          type="date"
+          [(ngModel)]="fechaFin"
+          (change)="aplicarFiltros()">
+      </div>
+
+    </div>
+
+    <!-- BOTONES -->
+    <div class="acciones">
+
+      <button class="btn-filtrar" (click)="aplicarFiltros()">
+        <span class="material-icons">filter_alt</span>
+        Aplicar filtros
+      </button>
+
+      <button class="btn-limpiar" (click)="limpiarFiltros()">
+        <span class="material-icons">restart_alt</span>
+        Limpiar
+      </button>
+
+      <button class="btn-exportar" (click)="exportarExcel()">
+        <span class="material-icons">table_view</span>
+        Exportar Excel
+      </button>
+
+      <button class="btn-imprimir" (click)="imprimirReporte()">
+        <span class="material-icons">print</span>
+        Imprimir
+      </button>
+
+    </div>
+
+    <!-- ALERTAS -->
+    @if (mensaje) {
+      <div class="alerta exito">
+        <span class="material-icons">check_circle</span>
+        {{ mensaje }}
+      </div>
+    }
+
+    @if (error) {
+      <div class="alerta error">
+        <span class="material-icons">error</span>
+        {{ error }}
+      </div>
+    }
+
+  </section>
+
+  <!-- TABLA -->
+  <section class="tabla-panel">
+
+    <div class="tabla-header">
+
+      <div>
+        <h2>Reporte generado</h2>
+        <p>{{ reporteFiltrado.length }} registros encontrados</p>
+      </div>
+
+      <div class="estado-reporte">
+        <span class="material-icons">fact_check</span>
+        Reporte actualizado
+      </div>
+
+    </div>
+
+    @if (cargando) {
+
+      <div class="loading">
+
+        <div class="spinner"></div>
+
+        <p>Cargando reportes...</p>
+
+      </div>
+
+    }
+
+    @if (!cargando && reporteFiltrado.length === 0) {
+
+      <div class="empty-state">
+
+        <span class="material-icons">folder_open</span>
+
+        <h3>No se encontraron registros</h3>
+
+        <p>
+          Intente modificar los filtros de búsqueda.
+        </p>
+
+      </div>
+
+    }
+
+    @if (!cargando && reporteFiltrado.length > 0) {
+
+      <div class="tabla-responsive">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>DNI</th>
+              <th>Adulto Mayor</th>
+              <th>Edad</th>
+              <th>Sexo</th>
+              <th>Distrito</th>
+              <th>SISFOH</th>
+              <th>Riesgo</th>
+              <th>Condición Social</th>
+              <th>Pensión 65</th>
+              <th>Salud</th>
+              <th>Visitas</th>
+              <th>Derivaciones</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            @for (adulto of reporteFiltrado; track adulto.id) {
+
+              <tr>
+
+                <td>
+                  {{ adulto?.datosPersonales?.dni }}
+                </td>
+
+                <td>
+
+                  <div class="adulto-info">
+
+                    <div class="avatar">
+
+                      @if (adulto?.datosPersonales?.foto) {
+
+                        <img
+                          [src]="adulto.datosPersonales.foto"
+                          alt="Foto">
+
+                      } @else {
+
+                        <span class="material-icons">
+                          person
+                        </span>
+
+                      }
+
+                    </div>
+
+                    <div>
+
+                      <strong>
+                        {{ nombreCompleto(adulto) }}
+                      </strong>
+
+                      <small>
+                        {{ adulto?.datosPersonales?.celular || 'Sin celular' }}
+                      </small>
+
+                    </div>
+
+                  </div>
+
+                </td>
+
+                <td>
+                  {{ edad(adulto) }}
+                </td>
+
+                <td>
+                  {{ adulto?.datosPersonales?.sexo }}
+                </td>
+
+                <td>
+                  {{ adulto?.ubicacionActual?.distrito || '-' }}
+                </td>
+
+                <td>
+
+                  <span class="badge sisfoh">
+
+                    {{
+                      adulto?.sisfoh?.clasificacionSocioeconomica
+                      || 'SIN CLASIFICAR'
+                    }}
+
+                  </span>
+
+                </td>
+
+                <td>
+
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'bajo': adulto?.evaluacionIntegral?.nivelRiesgo === 'BAJO',
+                      'medio': adulto?.evaluacionIntegral?.nivelRiesgo === 'MEDIO',
+                      'alto': adulto?.evaluacionIntegral?.nivelRiesgo === 'ALTO',
+                      'critico': adulto?.evaluacionIntegral?.nivelRiesgo === 'CRITICO'
+                    }">
+
+                    {{
+                      adulto?.evaluacionIntegral?.nivelRiesgo
+                      || 'NO EVALUADO'
+                    }}
+
+                  </span>
+
+                </td>
+
+                <td>
+
+                  <div class="chips">
+
+                    @if (adulto?.informacionSocial?.viveSolo) {
+                      <span class="chip warning">
+                        Vive solo
+                      </span>
+                    }
+
+                    @if (adulto?.informacionSocial?.situacionAbandono) {
+                      <span class="chip danger">
+                        Abandono
+                      </span>
+                    }
+
+                    @if (adulto?.informacionSocial?.victimaViolencia) {
+                      <span class="chip danger">
+                        Violencia
+                      </span>
+                    }
+
+                    @if (adulto?.informacionSocial?.tieneDiscapacidad) {
+                      <span class="chip info">
+                        Discapacidad
+                      </span>
+                    }
+
+                  </div>
+
+                </td>
+
+                <td>
+
+                  @if (adulto?.pension65?.posibleBeneficiario) {
+
+                    <span class="badge success">
+                      Beneficiario
+                    </span>
+
+                  } @else {
+
+                    <span class="badge neutral">
+                      No califica
+                    </span>
+
+                  }
+
+                </td>
+
+                <td>
+                  {{ adulto?.atencionesSalud?.length || 0 }}
+                </td>
+
+                <td>
+                  {{ adulto?.visitasDomiciliarias?.length || 0 }}
+                </td>
+
+                <td>
+                  {{ adulto?.derivacionesSalud?.length || 0 }}
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    }
+
+  </section>
+
+</div>
