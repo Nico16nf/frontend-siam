@@ -33,7 +33,7 @@ export class LoginAdminComponent implements OnInit {
     const host = window.location.hostname;
     const backendHost = host === 'localhost' ? 'localhost' : host;
 
-    this.apiUrl = `backend-siam-production.up.railway.app/api/usuarios/login/admin`;
+    this.apiUrl = `https://backend-siam-production.up.railway.app/api/usuarios/login/admin`;
 
     console.log('API URL:', this.apiUrl);
 
