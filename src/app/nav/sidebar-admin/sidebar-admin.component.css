@@ -1,5 +1,5 @@
 /* ==============================
-   SIDEBAR ADMIN BASE
+   SIDEBAR ADMIN PROFESIONAL
 ============================== */
 .sidebar-admin {
   width: 280px;
@@ -18,14 +18,56 @@
   justify-content: space-between;
 
   padding: 22px 16px;
-  box-shadow: 6px 0 24px rgba(31, 41, 55, 0.12);
+  box-shadow: 8px 0 28px rgba(31, 41, 55, 0.14);
   border-right: 1px solid rgba(143, 181, 171, 0.45);
+
+  transition: all 0.35s ease;
 }
 
-/* 👉 empuja TODO el contenido automáticamente */
+/* Empuja contenido en desktop */
+:host {
+  display: block;
+}
+
 body {
   margin-left: 280px;
-  transition: margin-left 0.3s ease;
+}
+
+/* ==============================
+   HAMBURGUESA
+============================== */
+.hamburger {
+  display: none;
+
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1200;
+
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 14px;
+
+  background: linear-gradient(135deg, #8FB5AB, #729B91);
+  color: white;
+
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(31, 41, 55, 0.22);
+}
+
+.hamburger .material-icons {
+  font-size: 28px;
+}
+
+/* ==============================
+   OVERLAY
+============================== */
+.overlay {
+  display: none;
 }
 
 /* ==============================
@@ -35,11 +77,27 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+
+  padding: 8px 6px 18px;
+  margin-bottom: 10px;
 }
 
-.logo .material-icons {
-  font-size: 34px;
+.logo-icon {
+  width: 48px;
+  height: 48px;
+
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.75);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 6px 16px rgba(31, 41, 55, 0.1);
+}
+
+.logo-icon .material-icons {
+  font-size: 31px;
   color: #8FB5AB;
 }
 
@@ -47,6 +105,14 @@ body {
   margin: 0;
   font-size: 18px;
   font-weight: 900;
+  letter-spacing: 0.3px;
+}
+
+.logo p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 600;
 }
 
 /* ==============================
@@ -58,14 +124,14 @@ body {
   gap: 12px;
 
   padding: 14px;
-  border-radius: 18px;
+  border-radius: 20px;
   cursor: pointer;
 
-  background: rgba(255,255,255,0.7);
-  border: 1px solid rgba(143,181,171,0.3);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(143,181,171,0.32);
+  box-shadow: 0 8px 20px rgba(31, 41, 55, 0.09);
 
-  transition: 0.25s ease;
+  transition: all 0.25s ease;
 }
 
 .perfil:hover {
@@ -74,20 +140,46 @@ body {
 }
 
 .avatar {
-  width: 44px;
-  height: 44px;
+  width: 45px;
+  height: 45px;
 
   background: linear-gradient(135deg, #8FB5AB, #729B91);
-  border-radius: 14px;
+  border-radius: 15px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
   color: white;
+  flex-shrink: 0;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.info h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info p {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.arrow {
+  color: #729B91;
 }
 
 /* ==============================
-   MENU
+   MENÚ
 ============================== */
 .menu {
   display: flex;
@@ -101,45 +193,58 @@ body {
   align-items: center;
   gap: 12px;
 
-  padding: 12px 14px;
-  border-radius: 14px;
+  padding: 13px 14px;
+  border-radius: 16px;
 
   text-decoration: none;
   color: #374151;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 14px;
 
-  transition: 0.25s ease;
+  transition: all 0.25s ease;
+}
+
+.item .material-icons {
+  font-size: 23px;
 }
 
 .item:hover {
-  background: rgba(255,255,255,0.7);
-  transform: translateX(4px);
+  background: rgba(255,255,255,0.75);
+  transform: translateX(5px);
 }
 
-/* ACTIVO */
 .item.active {
   background: linear-gradient(135deg, #8FB5AB, #729B91);
   color: white;
+  box-shadow: 0 8px 18px rgba(114, 155, 145, 0.35);
 }
 
 /* ==============================
    LOGOUT
 ============================== */
 .bottom {
-  margin-top: auto;
+  padding-top: 16px;
 }
 
 .logout {
+  width: 100%;
+
   display: flex;
   align-items: center;
   gap: 12px;
 
-  padding: 12px;
-  border-radius: 14px;
-  cursor: pointer;
+  padding: 13px 14px;
+  border-radius: 16px;
+
+  border: none;
+  background: transparent;
 
   color: #b91c1c;
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 14px;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
 .logout:hover {
@@ -147,70 +252,85 @@ body {
 }
 
 /* ==============================
-   TABLET (≤ 992px)
+   TABLET
 ============================== */
 @media (max-width: 992px) {
-
   .sidebar-admin {
-    width: 240px;
+    width: 250px;
   }
 
   body {
-    margin-left: 240px;
+    margin-left: 250px;
   }
 }
 
 /* ==============================
-   MÓVIL (≤ 768px)
+   MÓVIL: SALE DESDE LA DERECHA
 ============================== */
 @media (max-width: 768px) {
 
-  .sidebar-admin {
-    width: 80px;
-    padding: 20px 10px;
-  }
-
   body {
-    margin-left: 80px;
+    margin-left: 0;
   }
 
-  /* ocultar textos */
-  .logo h2,
-  .perfil .info,
-  .perfil .arrow,
-  .item span:last-child,
-  .logout span:last-child {
-    display: none;
+  .hamburger {
+    display: flex;
   }
 
-  .perfil {
-    justify-content: center;
+  .sidebar-admin {
+    left: auto;
+    right: -300px;
+
+    width: 280px;
+    height: 100vh;
+
+    border-right: none;
+    border-left: 1px solid rgba(143, 181, 171, 0.45);
+
+    box-shadow: -8px 0 28px rgba(31, 41, 55, 0.18);
   }
 
-  .item {
-    justify-content: center;
+  .sidebar-admin.open {
+    right: 0;
   }
 
-  .logout {
-    justify-content: center;
+  .overlay {
+    display: block;
+
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+
+    background: rgba(31, 41, 55, 0.38);
+    backdrop-filter: blur(3px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: all 0.3s ease;
+  }
+
+  .overlay.show {
+    opacity: 1;
+    visibility: visible;
   }
 }
 
 /* ==============================
-   MÓVIL PEQUEÑO (≤ 500px)
+   MÓVIL PEQUEÑO
 ============================== */
-@media (max-width: 500px) {
+@media (max-width: 420px) {
 
   .sidebar-admin {
-    width: 70px;
+    width: 86%;
+    right: -90%;
   }
 
-  body {
-    margin-left: 70px;
+  .logo h2 {
+    font-size: 16px;
   }
 
-  .avatar {
-    width: 38px;
-    height: 38px;
+  .item {
+    font-size: 13px;
   }
 }
