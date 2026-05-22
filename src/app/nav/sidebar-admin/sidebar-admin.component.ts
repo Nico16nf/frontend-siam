@@ -12,6 +12,7 @@ import { isPlatformBrowser, CommonModule } from '@angular/common';
 export class SidebarAdminComponent {
 
   usuario: any = null;
+  sidebarAbierto = false;
 
   constructor(
     private router: Router,
@@ -20,18 +21,27 @@ export class SidebarAdminComponent {
     this.cargarUsuario();
   }
 
-  cargarUsuario() {
+  cargarUsuario(): void {
     if (isPlatformBrowser(this.platformId)) {
       const data = sessionStorage.getItem('sessionAdmin');
       this.usuario = data ? JSON.parse(data) : null;
     }
   }
 
-  irPerfil() {
+  toggleSidebar(): void {
+    this.sidebarAbierto = !this.sidebarAbierto;
+  }
+
+  cerrarSidebar(): void {
+    this.sidebarAbierto = false;
+  }
+
+  irPerfil(): void {
+    this.cerrarSidebar();
     this.router.navigate(['/admin/perfil']);
   }
 
-  logout() {
+  logout(): void {
     if (isPlatformBrowser(this.platformId)) {
       sessionStorage.clear();
     }
