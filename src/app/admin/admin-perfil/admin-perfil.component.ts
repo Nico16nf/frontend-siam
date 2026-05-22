@@ -42,7 +42,7 @@ export class AdminPerfilComponent implements OnInit {
 
     const host = window.location.hostname;
     const backendHost = host === 'localhost' ? 'localhost' : host;
-    this.apiUrl = `http://${backendHost}:8080/api/usuarios`;
+    this.apiUrl = `backend-siam-production.up.railway.app/api/usuarios`;
 
     this.cargarPerfil();
   }
