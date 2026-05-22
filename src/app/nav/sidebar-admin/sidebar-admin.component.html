@@ -1,71 +1,88 @@
-<div class="sidebar-admin">
+<button class="hamburger" (click)="toggleSidebar()">
+  <span class="material-icons">
+    {{ sidebarAbierto ? 'close' : 'menu' }}
+  </span>
+</button>
 
-  <!-- 🔷 LOGO -->
-  <div class="logo">
-    <span class="material-icons">admin_panel_settings</span>
-    <h2>SIAM ADMIN</h2>
+<div 
+  class="overlay" 
+  [class.show]="sidebarAbierto" 
+  (click)="cerrarSidebar()">
+</div>
+
+<aside class="sidebar-admin" [class.open]="sidebarAbierto">
+
+  <div class="top">
+
+    <div class="logo">
+      <div class="logo-icon">
+        <span class="material-icons">admin_panel_settings</span>
+      </div>
+      <div>
+        <h2>SIAM ADMIN</h2>
+        <p>Panel administrativo</p>
+      </div>
+    </div>
+
+    <div class="perfil" (click)="irPerfil()">
+      <div class="avatar">
+        <span class="material-icons">person</span>
+      </div>
+
+      <div class="info">
+        <h4>{{ usuario?.nombres || 'Administrador' }}</h4>
+        <p>Ver perfil</p>
+      </div>
+
+      <span class="material-icons arrow">chevron_right</span>
+    </div>
+
+    <nav class="menu">
+
+      <a routerLink="/admin" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
+        <span class="material-icons">dashboard</span>
+        <span>Dashboard</span>
+      </a>
+
+      <a routerLink="/admin/usuarios" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
+        <span class="material-icons">group</span>
+        <span>Usuarios</span>
+      </a>
+
+      <a routerLink="/admin/reportes" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
+        <span class="material-icons">bar_chart</span>
+        <span>Reportes</span>
+      </a>
+
+      <a routerLink="/admin/datos" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
+        <span class="material-icons">storage</span>
+        <span>Datos</span>
+      </a>
+
+      <a routerLink="/admin/sistema" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
+        <span class="material-icons">settings</span>
+        <span>Sistema</span>
+      </a>
+
+      <a routerLink="/admin/seguridad" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
+        <span class="material-icons">security</span>
+        <span>Seguridad</span>
+      </a>
+
+      <a routerLink="/admin/personalizar" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
+        <span class="material-icons">palette</span>
+        <span>Personalización</span>
+      </a>
+
+    </nav>
+
   </div>
 
-  <!-- 🔷 PERFIL (CLICKEABLE) -->
-  <div class="perfil" (click)="irPerfil()">
-    <div class="avatar">
-      <span class="material-icons">person</span>
-    </div>
-    <div class="info">
-      <h4>{{ usuario?.nombres || 'Administrador' }}</h4>
-      <p>Ver perfil</p>
-    </div>
-    <span class="material-icons arrow">chevron_right</span>
-  </div>
-
-  <!-- 🔷 MENÚ -->
-  <nav class="menu">
-
-    <a routerLink="/admin" routerLinkActive="active" class="item">
-      <span class="material-icons">dashboard</span>
-      <span>Dashboard</span>
-    </a>
-
-    <a routerLink="/admin/usuarios" routerLinkActive="active" class="item">
-      <span class="material-icons">group</span>
-      <span>Usuarios</span>
-    </a>
-
-    <a routerLink="/admin/reportes" routerLinkActive="active" class="item">
-      <span class="material-icons">bar_chart</span>
-      <span>Reportes</span>
-    </a>
-
-    <a routerLink="/admin/datos" routerLinkActive="active" class="item">
-      <span class="material-icons">storage</span>
-      <span>Datos</span>
-    </a>
-
-    <a routerLink="/admin/sistema" routerLinkActive="active" class="item">
-      <span class="material-icons">settings</span>
-      <span>Sistema</span>
-    </a>
-
-    <a routerLink="/admin/seguridad" routerLinkActive="active" class="item">
-      <span class="material-icons">security</span>
-      <span>Seguridad</span>
-    </a>
-
-    <a routerLink="/admin/personalizar" routerLinkActive="active" class="item">
-      <span class="material-icons">palette</span>
-      <span>Personalización</span>
-    </a>
-
-  </nav>
-
-  <!-- 🔷 LOGOUT -->
   <div class="bottom">
-
-    <div class="logout" (click)="logout()">
+    <button class="logout" (click)="logout()">
       <span class="material-icons">logout</span>
       <span>Cerrar sesión</span>
-    </div>
-
+    </button>
   </div>
 
-</div>
+</aside>
