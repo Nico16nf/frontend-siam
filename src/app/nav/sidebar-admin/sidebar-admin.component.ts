@@ -56,9 +56,6 @@ export class SidebarAdminComponent {
   }
 
   // 🔷 MÉTODOS DE CONTROL PARA LA INTERFAZ (Resuelven los errores de compilación)
-  toggleSidebar() {
-    this.isCollapsed = !this.isCollapsed;
-  }
 
   toggleMobileSidebar() {
     this.isMobileActive = !this.isMobileActive;
