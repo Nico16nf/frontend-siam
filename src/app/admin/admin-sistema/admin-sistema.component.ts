@@ -28,7 +28,7 @@ export class AdminSistemaComponent {
       const host = window.location.hostname;
       const backendHost = host === 'localhost' ? 'localhost' : host;
 
-      this.apiUrl = `http://${backendHost}:8080/api/admin/datos`;
+      this.apiUrl = `https://backend-siam-production.up.railway.app/api/admin/datos`;
     }
   }
 

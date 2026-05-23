@@ -39,8 +39,8 @@ export class SaludPacientesComponent implements OnInit {
   ) {
     if (isPlatformBrowser(this.platformId)) {
       const host = window.location.hostname;
-      this.apiDerivaciones = `http://${host}:8080/api/derivaciones-salud`;
-      this.apiAdultos = `http://${host}:8080/api/adultos-mayores`;
+      this.apiDerivaciones = `https://backend-siam-production.up.railway.app/api/derivaciones-salud`;
+      this.apiAdultos = `https://backend-siam-production.up.railway.app/api/adultos-mayores`;
     }
   }
 

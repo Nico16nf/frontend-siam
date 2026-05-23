@@ -1,1 +1,201 @@
-<p>admin-dashboard works!</p>
+<section class="dashboard-admin" [class.sidebar-collapsed]="sidebarColapsado">
+
+  <div class="header-dashboard">
+    <div>
+      <p class="bienvenida">Panel de Administración</p>
+      <h1>Bienvenido, {{ usuario?.usuario || 'Administrador' }}</h1>
+      <span>Sistema Integral del Adulto Mayor</span>
+    </div>
+
+    <button class="btn-salir" (click)="cerrarSesion()">
+      <span class="material-icons">logout</span>
+      Cerrar sesión
+    </button>
+  </div>
+
+  <div *ngIf="cargando" class="estado cargando">
+    <span class="material-icons animar">sync</span>
+    Cargando información del sistema...
+  </div>
+
+  <div *ngIf="error && !cargando" class="estado error">
+    <span class="material-icons">warning</span>
+    {{ error }}
+  </div>
+
+  <ng-container *ngIf="!cargando">
+
+    <div class="grid-metricas">
+      <article class="card-metrica azul">
+        <span class="material-icons">groups</span>
+        <div>
+          <p>Adultos mayores registrados</p>
+          <h2>{{ totalAdultos }}</h2>
+          <small>{{ adultosActivos }} activos</small>
+        </div>
+      </article>
+
+      <article class="card-metrica verde">
+        <span class="material-icons">admin_panel_settings</span>
+        <div>
+          <p>Usuarios creados</p>
+          <h2>{{ totalUsuarios }}</h2>
+          <small>{{ usuariosActivos }} activos</small>
+        </div>
+      </article>
+
+      <article class="card-metrica rojo">
+        <span class="material-icons">medical_services</span>
+        <div>
+          <p>Atenciones de salud</p>
+          <h2>{{ totalAtencionesSalud }}</h2>
+          <small>Historial general</small>
+        </div>
+      </article>
+
+      <article class="card-metrica crema">
+        <span class="material-icons">swap_horiz</span>
+        <div>
+          <p>Derivaciones a salud</p>
+          <h2>{{ totalDerivaciones }}</h2>
+          <small>Desde CIAM</small>
+        </div>
+      </article>
+    </div>
+
+    <div class="grid-alertas">
+      <div class="alerta">
+        <span class="material-icons">priority_high</span>
+        <div>
+          <h3>{{ casosRiesgoAlto }}</h3>
+          <p>Casos con riesgo alto</p>
+        </div>
+      </div>
+
+      <div class="alerta">
+        <span class="material-icons">home_health</span>
+        <div>
+          <h3>{{ casosAbandono }}</h3>
+          <p>Casos de abandono</p>
+        </div>
+      </div>
+
+      <div class="alerta">
+        <span class="material-icons">payments</span>
+        <div>
+          <h3>{{ posiblesPension65 }}</h3>
+          <p>Relacionados a Pensión 65</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contenido-dashboard">
+
+      <article class="panel">
+        <div class="panel-header">
+          <h2>Usuarios por rol</h2>
+          <span class="material-icons">manage_accounts</span>
+        </div>
+
+        <div class="roles">
+          <div><span>Administrador</span><strong>{{ usuariosPorRol.ADMIN }}</strong></div>
+          <div><span>CIAM</span><strong>{{ usuariosPorRol.CIAM }}</strong></div>
+          <div><span>Salud</span><strong>{{ usuariosPorRol.SALUD }}</strong></div>
+          <div><span>Pensión 65</span><strong>{{ usuariosPorRol.PENSION_65 }}</strong></div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-header">
+          <h2>Accesos rápidos</h2>
+          <span class="material-icons">dashboard_customize</span>
+        </div>
+
+        <div class="acciones">
+          <button (click)="irA('/admin/usuarios')">
+            <span class="material-icons">person_add</span>
+            Gestionar usuarios
+          </button>
+
+          <button (click)="irA('/admin/reportes')">
+            <span class="material-icons">bar_chart</span>
+            Ver reportes
+          </button>
+
+          <button (click)="irA('/admin/datos')">
+            <span class="material-icons">database</span>
+            Datos del sistema
+          </button>
+
+          <button (click)="irA('/admin/seguridad')">
+            <span class="material-icons">security</span>
+            Seguridad
+          </button>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="tablas-dashboard">
+
+      <article class="panel tabla-panel">
+        <div class="panel-header">
+          <h2>Últimos adultos registrados</h2>
+          <span class="material-icons">elderly</span>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>DNI</th>
+              <th>Adulto mayor</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let adulto of adultosRecientes">
+              <td>{{ getDniAdulto(adulto) }}</td>
+              <td>{{ getNombreAdulto(adulto) }}</td>
+              <td>
+                <span class="badge" [class.inactivo]="!adulto.activo">
+                  {{ adulto.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="panel tabla-panel">
+        <div class="panel-header">
+          <h2>Últimos usuarios creados</h2>
+          <span class="material-icons">people</span>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Rol</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of usuariosRecientes">
+              <td>{{ user.usuario }}</td>
+              <td>{{ user.rol }}</td>
+              <td>
+                <span class="badge" [class.inactivo]="!user.activo">
+                  {{ user.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+    </div>
+
+  </ng-container>
+
+</section>

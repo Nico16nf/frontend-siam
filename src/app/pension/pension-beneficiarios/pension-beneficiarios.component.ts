@@ -31,7 +31,7 @@ export class PensionBeneficiariosComponent implements OnInit {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const host = window.location.hostname;
-      this.apiPension = `http://${host}:8080/api/pension65`;
+      this.apiPension = `https://backend-siam-production.up.railway.app/api/pension65`;
       this.listarBeneficiarios();
     }
   }

@@ -47,7 +47,7 @@ export class LoginSaludComponent implements OnInit {
         : host;
 
     this.apiUrl =
-      `http://${backendHost}:8080/api/usuarios/login/salud`;
+      `https://backend-siam-production.up.railway.app/api/usuarios/login/salud`;
 
     console.log('API URL SALUD:', this.apiUrl);
 

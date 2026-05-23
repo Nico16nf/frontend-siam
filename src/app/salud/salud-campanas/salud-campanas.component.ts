@@ -67,7 +67,7 @@ export class SaludCampanasComponent implements OnInit {
 
     const host = window.location.hostname;
 
-    this.apiUrl = `http://${host}:8080/api/campanas-salud`;
+    this.apiUrl = `https://backend-siam-production.up.railway.app/api/campanas-salud`;
 
     this.cargarCampanas();
   }

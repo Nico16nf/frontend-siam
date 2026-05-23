@@ -40,7 +40,7 @@ export class LoginPensionComponent implements OnInit {
     const host = window.location.hostname;
     const backendHost = host === 'localhost' ? 'localhost' : host;
 
-    this.apiUrl = `http://${backendHost}:8080/api/usuarios/login/pension`;
+    this.apiUrl = `https://backend-siam-production.up.railway.app/api/usuarios/login/pension`;
 
     this.validarSesionExistente();
   }

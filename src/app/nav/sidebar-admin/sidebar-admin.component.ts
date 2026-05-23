@@ -14,6 +14,10 @@ export class SidebarAdminComponent {
   usuario: any = null;
   sidebarAbierto = false;
 
+  // 🔷 NUEVOS ESTADOS PARA CONTROLAR LA INTERFAZ
+  isCollapsed = false;       // Controla el colapso en escritorio
+  isMobileActive = false;     // Controla el drawer lateral en móvil
+
   constructor(
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
@@ -39,6 +43,7 @@ export class SidebarAdminComponent {
   irPerfil(): void {
     this.cerrarSidebar();
     this.router.navigate(['/admin/perfil']);
+    this.closeMobileSidebar(); // Asegura cerrar en móviles al navegar
   }
 
   logout(): void {
@@ -47,5 +52,19 @@ export class SidebarAdminComponent {
     }
 
     this.router.navigate(['/login-admin']);
+    this.closeMobileSidebar(); // Asegura cerrar en móviles al salir
+  }
+
+  // 🔷 MÉTODOS DE CONTROL PARA LA INTERFAZ (Resuelven los errores de compilación)
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+
+  toggleMobileSidebar() {
+    this.isMobileActive = !this.isMobileActive;
+  }
+
+  closeMobileSidebar() {
+    this.isMobileActive = false;
   }
 }

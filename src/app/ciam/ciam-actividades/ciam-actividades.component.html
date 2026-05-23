@@ -1,1 +1,218 @@
-<p>ciam-actividades works!</p>
+<section class="ciam-page">
+
+  <div class="page-header">
+    <div>
+      <span class="tag">Módulo CIAM</span>
+      <h1>Gestión de Actividades</h1>
+      <p>Registra y organiza las actividades dirigidas al adulto mayor.</p>
+    </div>
+
+    <div class="header-icon">
+      <span class="material-icons">event_available</span>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="material-icons">event</span>
+      <div>
+        <h3>{{ actividades.length }}</h3>
+        <p>Total actividades</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <span class="material-icons">check_circle</span>
+      <div>
+        <h3>{{ totalActivas() }}</h3>
+        <p>Activas</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <span class="material-icons">cancel</span>
+      <div>
+        <h3>{{ totalInactivas() }}</h3>
+        <p>Inactivas</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="messages">
+    <div class="alert success" *ngIf="mensajeExito">
+      <span class="material-icons">check_circle</span>
+      {{ mensajeExito }}
+    </div>
+
+    <div class="alert error" *ngIf="mensajeError">
+      <span class="material-icons">error</span>
+      {{ mensajeError }}
+    </div>
+  </div>
+
+  <div class="content-grid">
+
+    <form class="form-card" (ngSubmit)="crearActividad()">
+
+      <div class="card-title">
+        <span class="material-icons">add_task</span>
+        <div>
+          <h2>Nueva actividad CIAM</h2>
+          <p>Completa los datos principales de la actividad.</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Nombre de actividad</label>
+          <input
+            type="text"
+            name="nombre"
+            [(ngModel)]="actividad.nombre"
+            placeholder="Ej: Taller de memoria"
+          >
+        </div>
+
+        <div class="form-group">
+          <label>Tipo de actividad</label>
+          <select name="tipo" [(ngModel)]="actividad.tipo">
+            <option value="">Seleccione una opción</option>
+            <option *ngFor="let tipo of tiposActividad" [value]="tipo">
+              {{ tipo }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Fecha</label>
+          <input
+            type="date"
+            name="fecha"
+            [(ngModel)]="actividad.fecha"
+          >
+        </div>
+
+        <div class="form-group">
+          <label>Lugar</label>
+          <input
+            type="text"
+            name="lugar"
+            [(ngModel)]="actividad.lugar"
+            placeholder="Ej: Local CIAM"
+          >
+        </div>
+
+        <div class="form-group">
+          <label>Responsable</label>
+          <input
+            type="text"
+            name="responsable"
+            [(ngModel)]="actividad.responsable"
+            placeholder="Ej: Coordinador CIAM"
+          >
+        </div>
+
+        <div class="form-group">
+          <label>Cupos</label>
+          <input
+            type="number"
+            name="cupos"
+            [(ngModel)]="actividad.cupos"
+            placeholder="Ej: 30"
+          >
+        </div>
+
+        <div class="form-group full">
+          <label>Descripción</label>
+          <textarea
+            name="descripcion"
+            [(ngModel)]="actividad.descripcion"
+            placeholder="Describe brevemente el objetivo de la actividad..."
+          ></textarea>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn secondary" (click)="limpiarFormulario()">
+          <span class="material-icons">cleaning_services</span>
+          Limpiar
+        </button>
+
+        <button type="submit" class="btn primary" [disabled]="guardando">
+          <span class="material-icons">save</span>
+          {{ guardando ? 'Guardando...' : 'Guardar actividad' }}
+        </button>
+      </div>
+
+    </form>
+
+    <div class="table-card">
+
+      <div class="card-title">
+        <span class="material-icons">list_alt</span>
+        <div>
+          <h2>Actividades registradas</h2>
+          <p>Listado general de actividades del CIAM.</p>
+        </div>
+      </div>
+
+      <div class="loading" *ngIf="cargando">
+        <span class="material-icons spin">progress_activity</span>
+        Cargando actividades...
+      </div>
+
+      <div class="empty" *ngIf="!cargando && actividades.length === 0">
+        <span class="material-icons">inbox</span>
+        <h3>No hay actividades registradas</h3>
+        <p>Registra la primera actividad del CIAM.</p>
+      </div>
+
+      <div class="table-wrapper" *ngIf="!cargando && actividades.length > 0">
+        <table>
+          <thead>
+            <tr>
+              <th>Actividad</th>
+              <th>Tipo</th>
+              <th>Fecha</th>
+              <th>Lugar</th>
+              <th>Cupos</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let act of actividades">
+              <td>
+                <strong>{{ act.nombre }}</strong>
+                <small>{{ act.responsable }}</small>
+              </td>
+
+              <td>{{ act.tipo }}</td>
+              <td>{{ act.fecha }}</td>
+              <td>{{ act.lugar }}</td>
+              <td>{{ act.cupos || 'Sin límite' }}</td>
+
+              <td>
+                <span class="badge" [class.inactive]="!act.activa">
+                  {{ act.activa ? 'Activa' : 'Inactiva' }}
+                </span>
+              </td>
+
+              <td>
+                <button class="delete-btn" (click)="eliminarActividad(act.id)">
+                  <span class="material-icons">delete</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

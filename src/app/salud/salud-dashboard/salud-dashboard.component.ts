@@ -50,7 +50,7 @@ export class SaludDashboardComponent implements OnInit {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const host = window.location.hostname;
-    this.apiBase = `http://${host}:8080/api`;
+    this.apiBase = `https://backend-siam-production.up.railway.app/api`;
 
     this.cargarDashboard();
   }

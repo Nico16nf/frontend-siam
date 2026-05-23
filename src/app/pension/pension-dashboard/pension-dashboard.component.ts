@@ -44,7 +44,7 @@ export class PensionDashboardComponent implements OnInit {
       const host = window.location.hostname;
 
       this.apiUrl =
-        `http://${host}:8080/api/pension65`;
+        `https://backend-siam-production.up.railway.app/api/pension65`;
 
       this.cargarDashboard();
     }

@@ -34,7 +34,7 @@ export class CiamSocialComponent implements OnInit {
   ) {
     if (isPlatformBrowser(this.platformId)) {
       const host = window.location.hostname;
-      this.apiUrl = `http://${host}:8080/api/adultos-mayores`;
+      this.apiUrl = `https://backend-siam-production.up.railway.app/api/adultos-mayores`;
     }
   }
 

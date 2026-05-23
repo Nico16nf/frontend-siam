@@ -36,7 +36,7 @@ export class LoginCiamComponent implements OnInit {
     const host = window.location.hostname;
     const backendHost = host === 'localhost' ? 'localhost' : host;
 
-    this.apiUrl = `http://${backendHost}:8080/api/usuarios/login/ciam`;
+    this.apiUrl = `https://backend-siam-production.up.railway.app/api/usuarios/login/ciam`;
 
     console.log('API URL CIAM:', this.apiUrl);
 

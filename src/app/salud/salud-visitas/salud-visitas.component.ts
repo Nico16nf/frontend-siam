@@ -38,7 +38,7 @@ export class SaludVisitasComponent implements OnInit {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const host = window.location.hostname;
-    this.apiUrl = `http://${host}:8080/api`;
+    this.apiUrl = `https://backend-siam-production.up.railway.app/api`;
 
     this.cargarAdultosMayores();
   }

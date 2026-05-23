@@ -42,7 +42,7 @@ export class PensionReportesComponent implements OnInit {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const host = window.location.hostname;
-      this.apiUrl = `http://${host}:8080/api/pension65`;
+      this.apiUrl = `https://backend-siam-production.up.railway.app/api/pension65`;
       this.cargarReportes();
     }
   }

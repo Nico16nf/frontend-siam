@@ -37,8 +37,8 @@ export class PensionSaludComponent implements OnInit {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const host = window.location.hostname;
-      this.apiAdultos = `http://${host}:8080/api/adultos-mayores`;
-      this.apiSalud = `http://${host}:8080/api/salud`;
+      this.apiAdultos = `https://backend-siam-production.up.railway.app/api/adultos-mayores`;
+      this.apiSalud = `https://backend-siam-production.up.railway.app/api/salud`;
       this.listarAdultos();
     }
   }

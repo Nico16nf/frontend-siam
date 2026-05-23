@@ -86,7 +86,7 @@ export class CiamRegistraradultoComponent {
       const host = window.location.hostname;
 
       this.apiUrl =
-        `http://${host}:8080/api/adultos-mayores`;
+        `https://backend-siam-production.up.railway.app/api/adultos-mayores`;
     }
   }
 

@@ -1,88 +1,122 @@
-<button class="hamburger" (click)="toggleSidebar()">
-  <span class="material-icons">
-    {{ sidebarAbierto ? 'close' : 'menu' }}
+<!-- 🔷 BACKDROP OVERLAY PARA MÓVIL (Cierra el menú al pulsar fuera con efecto blur) -->
+<div 
+  class="sidebar-overlay" 
+  [class.visible]="isMobileActive" 
+  (click)="closeMobileSidebar()">
+</div>
+
+<!-- 🔷 BOTÓN HAMBURGUESA FLOTANTE PARA MÓVIL (CSS Animado - Lado Izquierdo) -->
+<button 
+  class="mobile-toggle-btn" 
+  [class.open]="isMobileActive"
+  (click)="toggleMobileSidebar()" 
+  [attr.aria-label]="isMobileActive ? 'Cerrar menú' : 'Abrir menú'">
+  <span class="hamburger-box">
+    <span class="hamburger-inner"></span>
   </span>
 </button>
 
+<!-- 🔷 CONTENEDOR PRINCIPAL DE LA BARRA LATERAL -->
 <div 
-  class="overlay" 
-  [class.show]="sidebarAbierto" 
-  (click)="cerrarSidebar()">
-</div>
+  class="sidebar-admin" 
+  [class.collapsed]="isCollapsed" 
+  [class.mobile-active]="isMobileActive">
 
-<aside class="sidebar-admin" [class.open]="sidebarAbierto">
-
-  <div class="top">
-
+  <!-- 🔷 SECCIÓN SUPERIOR: LOGO Y BOTÓN COLAPSO DESKTOP (Border-Half) -->
+  <div class="header-section">
     <div class="logo">
-      <div class="logo-icon">
-        <span class="material-icons">admin_panel_settings</span>
+      <div class="logo-icon-wrapper">
+        <span class="material-icons logo-icon">admin_panel_settings</span>
       </div>
-      <div>
-        <h2>SIAM ADMIN</h2>
-        <p>Panel administrativo</p>
-      </div>
+      <h2 class="logo-text">SIAM <span>ADMIN</span></h2>
     </div>
-
-    <div class="perfil" (click)="irPerfil()">
-      <div class="avatar">
-        <span class="material-icons">person</span>
-      </div>
-
-      <div class="info">
-        <h4>{{ usuario?.nombres || 'Administrador' }}</h4>
-        <p>Ver perfil</p>
-      </div>
-
-      <span class="material-icons arrow">chevron_right</span>
-    </div>
-
-    <nav class="menu">
-
-      <a routerLink="/admin" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
-        <span class="material-icons">dashboard</span>
-        <span>Dashboard</span>
-      </a>
-
-      <a routerLink="/admin/usuarios" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
-        <span class="material-icons">group</span>
-        <span>Usuarios</span>
-      </a>
-
-      <a routerLink="/admin/reportes" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
-        <span class="material-icons">bar_chart</span>
-        <span>Reportes</span>
-      </a>
-
-      <a routerLink="/admin/datos" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
-        <span class="material-icons">storage</span>
-        <span>Datos</span>
-      </a>
-
-      <a routerLink="/admin/sistema" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
-        <span class="material-icons">settings</span>
-        <span>Sistema</span>
-      </a>
-
-      <a routerLink="/admin/seguridad" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
-        <span class="material-icons">security</span>
-        <span>Seguridad</span>
-      </a>
-
-      <a routerLink="/admin/personalizar" routerLinkActive="active" class="item" (click)="cerrarSidebar()">
-        <span class="material-icons">palette</span>
-        <span>Personalización</span>
-      </a>
-
-    </nav>
-
-  </div>
-
-  <div class="bottom">
-    <button class="logout" (click)="logout()">
-      <span class="material-icons">logout</span>
-      <span>Cerrar sesión</span>
+    
+    <!-- Botón para colapsar en Escritorio (oculto en móvil) -->
+    <button 
+      class="collapse-desktop-btn" 
+      (click)="toggleSidebar()" 
+      title="Colapsar panel">
+      <span class="material-icons">chevron_left</span>
     </button>
   </div>
 
-</aside>
+  <!-- 🔷 SECCIÓN PERFIL CON ENCUADRE DE ALTA GAMA -->
+  <div class="perfil" (click)="irPerfil()" title="Ver perfil de administrador">
+    <div class="avatar-wrapper">
+      <div class="avatar">
+        <span class="material-icons">person</span>
+      </div>
+      <span class="status-indicator online"></span>
+    </div>
+    <div class="info">
+      <h4>{{ usuario?.nombres || 'Administrador' }}</h4>
+      <p>Ver perfil</p>
+    </div>
+    <span class="material-icons arrow">chevron_right</span>
+  </div>
+
+  <!-- 🔷 NAVEGACIÓN PRINCIPAL -->
+  <nav class="menu-container">
+    
+    <!-- Grupo 1: General -->
+    <div class="menu-group">
+      <span class="group-title">General</span>
+      <div class="group-items">
+        <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="item" data-tooltip="Dashboard" (click)="closeMobileSidebar()">
+          <span class="material-icons">dashboard</span>
+          <span class="item-text">Dashboard</span>
+        </a>
+        <a routerLink="/admin/usuarios" routerLinkActive="active" class="item" data-tooltip="Usuarios" (click)="closeMobileSidebar()">
+          <span class="material-icons">group</span>
+          <span class="item-text">Usuarios</span>
+        </a>
+        <a routerLink="/admin/reportes" routerLinkActive="active" class="item" data-tooltip="Reportes" (click)="closeMobileSidebar()">
+          <span class="material-icons">bar_chart</span>
+          <span class="item-text">Reportes</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Grupo 2: Sistema -->
+    <div class="menu-group">
+      <span class="group-title">Administración</span>
+      <div class="group-items">
+        <a routerLink="/admin/datos" routerLinkActive="active" class="item" data-tooltip="Datos" (click)="closeMobileSidebar()">
+          <span class="material-icons">storage</span>
+          <span class="item-text">Datos</span>
+        </a>
+        <a routerLink="/admin/sistema" routerLinkActive="active" class="item" data-tooltip="Sistema" (click)="closeMobileSidebar()">
+          <span class="material-icons">settings</span>
+          <span class="item-text">Sistema</span>
+        </a>
+        <a routerLink="/admin/seguridad" routerLinkActive="active" class="item" data-tooltip="Seguridad" (click)="closeMobileSidebar()">
+          <span class="material-icons">security</span>
+          <span class="item-text">Seguridad</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Grupo 3: Apariencia -->
+    <div class="menu-group">
+      <span class="group-title">Apariencia</span>
+      <div class="group-items">
+        <a routerLink="/admin/personalizar" routerLinkActive="active" class="item" data-tooltip="Personalización" (click)="closeMobileSidebar()">
+          <span class="material-icons">palette</span>
+          <span class="item-text">Personalización</span>
+        </a>
+      </div>
+    </div>
+
+  </nav>
+
+  <!-- 🔷 SECCIÓN INFERIOR: LOGOUT -->
+  <div class="bottom-section">
+    <div class="logout" (click)="logout()" data-tooltip="Cerrar sesión">
+      <div class="logout-icon-wrapper">
+        <span class="material-icons">logout</span>
+      </div>
+      <span class="logout-text">Cerrar sesión</span>
+    </div>
+  </div>
+
+</div>
